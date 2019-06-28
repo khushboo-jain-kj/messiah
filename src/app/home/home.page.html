@@ -1,0 +1,42 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            Home
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-fab vertical="bottom" horizontal="end">
+        <ion-fab-button>Overlay</ion-fab-button>
+        <ion-fab-list side="top">
+            <ion-fab-button (click)="setOverlayMap('wind')">Wind</ion-fab-button>
+            <ion-fab-button (click)="setOverlayMap('temp')">Temperature</ion-fab-button>
+            <ion-fab-button (click)="setOverlayMap('clouds')">Cloud</ion-fab-button>
+            <ion-fab-button (click)="setOverlayMap('rain')">Rain</ion-fab-button>
+        </ion-fab-list>
+    </ion-fab>
+    <ion-searchbar [(ngModel)]="autocomplete" (ionInput)="updateSearchResults($event)" placeholder="Search for a place">
+    </ion-searchbar>
+    <ion-list class="autocomplete-result" [hidden]="autocompleteItems.length == 0">
+        <ion-item *ngFor="let item of autocompleteItems" tappable (click)="selectSearchResult(item)">
+            {{ item.desc }}
+        </ion-item>
+    </ion-list>
+    <div id="windycontainer"></div>
+    <div *ngIf="weatherData">
+        <p>temperature : {{weatherData.temperature}}</p>
+        <p>cloudCoverPhrase : {{weatherData.cloudCoverPhrase}}</p>
+        <p>temperatureFeelsLike : {{weatherData.temperatureFeelsLike}}</p>
+        <p>windSpeed : {{weatherData.windSpeed}}</p>
+    </div>
+    <div>News
+        <p *ngFor="let news of newsData" (click)="openHeadline(news)">
+            <span>Headline : {{news.news}}</span><br>
+            <span>Area : {{news.area}}</span>
+        </p>
+    </div>
+</ion-content>

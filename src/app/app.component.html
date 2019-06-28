@@ -1,0 +1,53 @@
+<ion-app>
+    <ion-split-pane>
+        <ion-menu type="overlay">
+            <ion-header class="application-left-menu-header">
+                <ion-toolbar>
+                    <ion-card>
+                        <ion-card-header>
+                            <ion-img [src]="image" class="user-icon"></ion-img>
+                            <ion-card-title class="roboto-font">Hello user!</ion-card-title>
+                        </ion-card-header>
+                        <ion-card-content>
+                            <ion-grid>
+                                <ion-row>
+                                    <ion-col>
+                                        New here? Sign up!
+                                    </ion-col>
+                                </ion-row>
+                                <ion-row>
+                                    <ion-col>
+                                    </ion-col>
+                                    <ion-col>
+                                        <ion-icon name="logo-facebook"></ion-icon>
+                                    </ion-col>
+                                    <ion-col>
+                                        <ion-icon name="logo-google"></ion-icon>
+                                    </ion-col>
+                                    <ion-col>
+                                    </ion-col>
+                                </ion-row>
+                            </ion-grid>
+                        </ion-card-content>
+                    </ion-card>
+                </ion-toolbar>
+            </ion-header>
+            <ion-content>
+                <ion-list>
+                    <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
+                        <ion-item [routerDirection]="'root'" [routerLink]="[p.url]">
+                            <ion-icon slot="start" [name]="p.icon"></ion-icon>
+                            <ion-label>
+                                {{p.title}}
+                            </ion-label>
+                        </ion-item>
+                    </ion-menu-toggle>
+                </ion-list>
+            </ion-content>
+        </ion-menu>
+        <ion-router-outlet main></ion-router-outlet>
+    </ion-split-pane>
+</ion-app>
+<div id="container" style="visibility: hidden">
+    <div id="windy" style="height: 400px;"></div>
+</div>

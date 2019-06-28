@@ -1,0 +1,33 @@
+<ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            Talk to us
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+    <ion-content class="no-message-container" *ngIf="chatMessages.length == 0">
+        <div>
+            <ion-icon name="chatboxes"></ion-icon>
+            <p>Please type a message...</p>
+        </div>
+    </ion-content>
+    <ion-content *ngIf="chatMessages.length > 0">
+        <div class="comment-box" *ngFor="let chat of chatMessages">
+            <div class="animated fadeInUp comment" [ngClass]="chat.chatFrom ==='USER' ? 'comment-user' : 'comment-bot'" [innerHTML]="chat.chatMessage"></div>
+        </div>
+    </ion-content>
+</ion-content>
+
+<ion-footer>
+    <ion-toolbar>
+        <ion-item>
+            <ion-textarea [(ngModel)]="userText" placeholder="Enter message here..."></ion-textarea>
+            <ion-icon *ngIf="userText.length > 0" name="arrow-round-up" (click)="sendUserInputToWatson()" class="send-message-button"></ion-icon>
+        </ion-item>
+    </ion-toolbar>
+</ion-footer>

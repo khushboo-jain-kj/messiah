@@ -1,0 +1,66 @@
+@mixin commentBubbleRadius($borderRadiusValue) {
+    border-bottom-left-radius: $borderRadiusValue;
+    border-top-left-radius: $borderRadiusValue;
+    border-top-right-radius: $borderRadiusValue;
+    border-bottom-right-radius: $borderRadiusValue;
+}
+
+.no-message-container {
+    >div {
+        color: #999999;
+        text-align: center;
+        margin-top: 50%;
+        ion-icon {
+            font-size: 60px;
+            padding: 20px;
+            border: 1px solid #999999;
+            border-radius: 50%;
+            color: #ffffff;
+            background: #999999;
+            box-shadow: 0 0 10px #999999;
+        }
+    }
+}
+
+.send-message-button {
+    font-size: 30px;
+    background-color: #007AFF;
+    color: #ffffff;
+    border-radius: 50%;
+}
+
+ion-menu-button {
+    color: #3a3a3c;
+}
+
+.comment-box {
+    margin-top: 15px;
+    color: #48484A;
+}
+
+.comment {
+    max-width: 80%;
+    text-align: left;
+    text-align: left;
+    line-height: 1.5;
+    padding: 2% 3%;
+}
+
+.comment-user {
+    @include commentBubbleRadius(25px);
+    float: right;
+    margin-right: 7%;
+    border-bottom-right-radius: 0px;
+    background-color: #0A84FF;
+    color: white;
+}
+
+.comment-bot {
+    background-color: #F2F2F7;
+    border: 1px solid #F2F2F7;
+    @include commentBubbleRadius(25px);
+    margin-left: 6%;
+    margin-top: 20%;
+    margin-bottom: 5%;
+    border-top-left-radius: 0px;
+}
