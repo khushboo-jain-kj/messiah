@@ -39,4 +39,8 @@ export class WeatherService {
     getSentimentByMessage(message: string) {
         return this.http.get("https://eu-gb.functions.cloud.ibm.com/api/v1/web/Khushboo.Jain%40cognizant.com_dev/default/GetMessageSentiment.json?message=" + message);
     }
+
+    getPowerDisruptionForecast(lattitude: any, longitude: any) {
+        return this.http.get('https://eu-gb.functions.cloud.ibm.com/api/v1/web/Khushboo.Jain%40cognizant.com_dev/default/GetPowerDisruptionDataByCoordinates.json?lattitude=' + lattitude + "&longitude=" + longitude)
+    }
 }

@@ -10,21 +10,22 @@
 </ion-header>
 
 <ion-content>
-    <div *ngFor="let news of weatherNews" (click)="getNewsDetails(news)">
-        <ion-card class="roboto-font" color="primary">
-            <ion-card-header>
-                <ion-card-title>{{news.severity}} {{news.eventDescription}}</ion-card-title>
-                <ion-card-subtitle>{{news.messageType}} - {{getMomentValue(news.issueTimeLocal)}}</ion-card-subtitle>
-            </ion-card-header>
-            <ion-card-content>
-                <p>{{news.areaName}}, {{news.adminDistrict}} : {{news.headlineText}}</p>
-                <p>People are asked to<span class="comma-separator" *ngFor="let response of news.responseTypes"> {{response.responseType}}</span></p>
-
-                <div>
-
-                </div>
-                <p class="card-footer">Source - {{news.source}}</p>
-            </ion-card-content>
-        </ion-card>
-    </div>
+    <h2 class="section-header">Headlines near you</h2>
+    <ion-card *ngFor="let news of weatherNews">
+        <ion-card-header>
+            <ion-card-title>{{news.severity}} {{news.eventDescription}}</ion-card-title>
+            <ion-card-subtitle>{{news.messageType}} - {{getMomentValue(news.issueTimeLocal)}}</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+            <p class="headlines-text">{{news.areaName}}, {{news.adminDistrict}} : {{news.headlineText}}</p>
+            <div *ngIf="news.responseTypes && news.responseTypes.length > 0">
+                <ion-badge color="light" *ngFor="let response of news.responseTypes">#{{response.responseType}}&nbsp;
+                </ion-badge>
+            </div>
+            <div *ngIf="news.detail && news.detail.texts && news.detail.texts.length > 0">
+                <p class="news-text" *ngFor="let newsText of news.detail.texts">{{newsText.description}}</p>
+            </div>
+            <p class="card-footer">Source - {{news.source}}</p>
+        </ion-card-content>
+    </ion-card>
 </ion-content>
