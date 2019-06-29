@@ -4,14 +4,95 @@
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title>
-            Home
+            Weather
         </ion-title>
     </ion-toolbar>
 </ion-header>
 
+<ion-card *ngIf="weatherData" [attr.color]="weatherData.dayOrNight === 'D'? 'light' : 'medium'"
+    (click)="toggleWeatherDetails()">
+    <ion-card-header>
+        <ion-card-title>{{weatherData.temperature}}&deg;C</ion-card-title>
+        <ion-card-subtitle>{{weatherData.cloudCoverPhrase}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content *ngIf="isWeatherDetailsExpanded">
+        <ion-grid class="weather-data-details">
+            <ion-row>
+                <ion-col>
+                    <div>Max. Temperature</div>
+                    <div>{{weatherData.temperatureMax24Hour}}<span>&deg;C</span></div>
+                </ion-col>
+                <ion-col>
+                    <div>Min. Temperature</div>
+                    <div>{{weatherData.temperatureMin24Hour}}<span>&deg;C</span></div>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col>
+                    <div>Sunrise</div>
+                    <div>
+                        {{weatherData.sunriseTimeLocal | date:'h:mm'}}<span>{{weatherData.sunriseTimeLocal | date:'a'}}</span>
+                    </div>
+                </ion-col>
+                <ion-col>
+                    <div>Sunset</div>
+                    <div>
+                        {{weatherData.sunsetTimeLocal | date:'h:mm'}}<span>{{weatherData.sunsetTimeLocal | date:'a'}}</span>
+                    </div>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col>
+                    <div>Chance of rain</div>
+                    <div>{{weatherData.sunriseTimeLocal | date:'h:mm'}}<span>{{weatherData.sunriseTimeLocal | date:'a'}}</span></div>
+                </ion-col>
+                <ion-col>
+                    <div>Humidity</div>
+                    <div>{{weatherData.relativeHumidity}}<span>%</span></div>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col>
+                    <div>Wind</div>
+                    <div><span>{{weatherData.windDirectionCardinal}}&nbsp;</span>{{weatherData.windSpeed}} km/hr</div>
+                </ion-col>
+                <ion-col>
+                    <div>Feels like</div>
+                    <div>{{weatherData.temperatureFeelsLike}}<span>&deg;</span></div>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col>
+                    <div>Precipitation</div>
+                    <div>{{weatherData.precip1Hour}} <span>cm</span></div>
+                </ion-col>
+                <ion-col>
+                    <div>Pressure</div>
+                    <div>{{weatherData.pressureMeanSeaLevel}}<span>&nbsp;hPa</span></div>
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+                <ion-col>
+                    <div>Visibility</div>
+                    <div>{{weatherData.visibility}} <span>km</span></div>
+                </ion-col>
+                <ion-col>
+                    <div>UV Index</div>
+                    <div>{{weatherData.uvIndex}}</div>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-card-content>
+</ion-card>
+
 <ion-content>
     <ion-fab vertical="bottom" horizontal="end">
-        <ion-fab-button>Overlay</ion-fab-button>
+        <ion-fab-button><ion-icon name="apps"></ion-icon></ion-fab-button>
         <ion-fab-list side="top">
             <ion-fab-button (click)="setOverlayMap('wind')">Wind</ion-fab-button>
             <ion-fab-button (click)="setOverlayMap('temp')">Temperature</ion-fab-button>
@@ -27,16 +108,4 @@
         </ion-item>
     </ion-list>
     <div id="windycontainer"></div>
-    <div *ngIf="weatherData">
-        <p>temperature : {{weatherData.temperature}}</p>
-        <p>cloudCoverPhrase : {{weatherData.cloudCoverPhrase}}</p>
-        <p>temperatureFeelsLike : {{weatherData.temperatureFeelsLike}}</p>
-        <p>windSpeed : {{weatherData.windSpeed}}</p>
-    </div>
-    <div>News
-        <p *ngFor="let news of newsData" (click)="openHeadline(news)">
-            <span>Headline : {{news.news}}</span><br>
-            <span>Area : {{news.area}}</span>
-        </p>
-    </div>
 </ion-content>

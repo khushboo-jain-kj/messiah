@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
@@ -25,6 +26,7 @@ export class HomePage {
   autocompleteItems: any = [];
   weatherData: any;
   newsData: any = [];
+  isWeatherDetailsExpanded: boolean;
 
   constructor(public androidPermissions: AndroidPermissions, public locationAccuracy: LocationAccuracy,
     public geolocation: Geolocation, private weatherService: WeatherService) {
@@ -62,6 +64,7 @@ export class HomePage {
 
     this.weatherService.getWeatherByCord(lat, lng).subscribe(res => {
       this.weatherData = res.json();
+      console.log(this.weatherData);;
     }, err => { });
 
     this.newsData = [];
@@ -180,5 +183,9 @@ export class HomePage {
     this.weatherService.getNewsDetails(news.key).subscribe(res => {
       console.log(res.json());
     }, err => { });
+  }
+
+  toggleWeatherDetails() {
+    this.isWeatherDetailsExpanded = ! this.isWeatherDetailsExpanded;
   }
 }
