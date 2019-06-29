@@ -22,11 +22,6 @@ ion-slides {
 .section-header {
   margin-top: 18px;
   font-size: 24px;
-  margin-left: 4%;
-}
-
-ion-card-header {
-  border-bottom: 1px solid #fff;
 }
 
 ion-card-content {
@@ -44,5 +39,15 @@ ion-card-content {
     margin-bottom: 15px;
     margin-top: 5px;
     font-size: 18px;
+  }
+}
+
+.disaster-action-items {
+  font-size: 50px;
+  > div {
+    position: absolute;
+    right: 20px;
+    bottom: 25px;
+    font-size: 50px;
   }
 }

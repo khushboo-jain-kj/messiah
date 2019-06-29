@@ -1,15 +1,10 @@
-@mixin commentBubbleRadius($borderRadiusValue) {
-    border-bottom-left-radius: $borderRadiusValue;
-    border-top-left-radius: $borderRadiusValue;
-    border-top-right-radius: $borderRadiusValue;
-    border-bottom-right-radius: $borderRadiusValue;
-}
+@import '../../styles/mixins.scss';
 
 .no-message-container {
     >div {
         color: #999999;
         text-align: center;
-        margin-top: 50%;
+        margin-top: 15%;
         ion-icon {
             font-size: 60px;
             padding: 20px;

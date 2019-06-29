@@ -43,4 +43,8 @@ export class WeatherService {
     getPowerDisruptionForecast(lattitude: any, longitude: any) {
         return this.http.get('https://eu-gb.functions.cloud.ibm.com/api/v1/web/Khushboo.Jain%40cognizant.com_dev/default/GetPowerDisruptionDataByCoordinates.json?lattitude=' + lattitude + "&longitude=" + longitude)
     }
+
+    getNLPDataFromText(message: string) {
+        return this.http.get('https://eu-gb.functions.cloud.ibm.com/api/v1/web/Khushboo.Jain%40cognizant.com_dev/default/GetNLPDataFromText.json?message=' + message);
+    }
 }

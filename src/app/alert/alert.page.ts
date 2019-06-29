@@ -4,6 +4,8 @@ import * as moment from 'moment';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { DisasterModel } from '../models/disaster-model';
+import { analyzeAndValidateNgModules } from '@angular/compiler';
 
 @Component({
   selector: 'app-alert',
@@ -14,7 +16,8 @@ export class AlertPage implements OnInit {
 
   locationCoords: any;
   powerDisruptionData: any;
-
+  disasters: Array<DisasterModel> = [];
+  contextNews: any;
   weatherNews: Array<any> = [];
 
   constructor(public androidPermissions: AndroidPermissions,
@@ -26,11 +29,13 @@ export class AlertPage implements OnInit {
 
   ngOnInit() {
     //this.checkGPSPermission();
+    this.disasters = [];
     this.getWeatherNews();
   }
 
   getHomeScreenData() {
     this.getWeatherNews(this.locationCoords.latitude, this.locationCoords.longitude);
+    this.getPowerDisruptionForNext30Days(this.locationCoords.latitude, this.locationCoords.longitude);
   }
 
   getPowerDisruptionForNext30Days(lattitude?: any, longitude?: any) {
@@ -53,12 +58,13 @@ export class AlertPage implements OnInit {
         this.getWeatherHeadLinesHardCodeData();
       }
       (this.weatherNews as Array<any>).forEach(element => {
+        this.contextNews = element;
         this.getNewsDetails(element);
       });
       (this.weatherNews as Array<any>).forEach(element => {
+        this.contextNews = element;
         this.getNewsSentiment(element);
       });
-      console.log(this.weatherNews);
     });
   }
 
@@ -131,14 +137,12 @@ export class AlertPage implements OnInit {
     let response: any;
     this.weatherService.getSentimentByMessage(news.severity + ' ' + news.headlineText).subscribe(res => {
       response = res.json();
-      this.getCardIntentClassName(response, news);
+      this.getDisasterModel(response, news);
     });
   }
 
-  getCardIntentClassName(response: any, news: any) {
+  getDisasterModel(response: any, news: any) {
     let toneArray: Array<any> = [];
-    let className: string = 'tertiary';
-
     if ((response as any) && (response as any).document_tone) {
       ((response as any).document_tone.tones as Array<any>).forEach(element => {
         if (element.score > 0.6) {
@@ -150,14 +154,69 @@ export class AlertPage implements OnInit {
     if (toneArray.length > 0) {
       toneArray.forEach(element => {
         if (element === 'Anger' || element === 'Fear') {
-          className = 'danger';
-        } else {
-          className = 'warning';
+          this.populateDisasterModel(news);
         }
       });
     }
-    let index: number = this.findWithAttr(this.weatherNews, 'detailKey', news.detailKey);
-    this.weatherNews[index].class = className;
+  }
+
+  populateDisasterModel(news: any) {
+    let newsDescription: string;
+    (news.detail.texts as Array<any>).forEach(text => {
+      newsDescription += text.description + ' ';
+    });
+    // Step 1 : For disaster model population, doing the NLP analysis of the text of the news description.
+    this.weatherService.getNLPDataFromText(newsDescription).subscribe(nlpResult => {
+      let data = nlpResult.json();
+      this.populateDisasterModelStep1(data);
+    });
+  }
+
+  populateDisasterModelStep1(nlpResult: any) {
+    if (nlpResult) {
+      let _disasterType: string;
+      // Run loop on the keywords to check if the word Flood/Cyclone comes in the values
+      (nlpResult.keywords as Array<any>).forEach(keyword => {
+        if (keyword.relevance > 0.7) {
+          let emotions: any = keyword.emotion;
+          Object.keys(emotions).reduce((a, b) => emotions[a] > emotions[b] ? a : b);
+          let disaster: DisasterModel = new DisasterModel();
+
+          // Add possibility score of the disaster occurence to small percentage as this is done on the basis of the
+          // weather alert sentiment news.
+          disaster.disasterPossibility = 0.2;
+
+          // Check if the keyword Flood/Cyclone exists in the keywords
+          if (keyword.text.toUpperCase().indexOf('FLOOD') !== -1) {
+            disaster.disasterType = 'Flood';
+            _disasterType = 'Flood';
+          } else if (keyword.text.toUpperCase().indexOf('CYCLONE') !== -1) {
+            disaster.disasterType = 'Cyclone';
+            _disasterType = 'Cyclone';
+          }
+
+          // Push the disaster once in the array of the disasters alert to show the users in the screen
+          if (this.findWithAttr(this.disasters, 'disasterType', _disasterType) === -1) {
+            this.disasters.push(disaster);
+          }
+        }
+      });
+
+      // Populate the disaster location and the disaster coordinate location details
+      (nlpResult.entities as any).forEach(entity => {
+        if (entity.type === 'GeographicFeature') {
+          let index: number = this.findWithAttr(this.disasters, 'disasterType', _disasterType);
+          this.disasters[index].disasterLocation = entity.text;
+
+          // In case the disaster type is flood, push the details in the disaster area polygon coordinates
+          if (this.disasters[index].disasterType === 'Flood') {
+            this.disasters[index].disasterAreaPolygonCoordinates = this.contextNews.detail && this.contextNews.detail.polygon ? this.contextNews.detail.polygon : null;
+          } else if (this.disasters[index].disasterType === 'Cyclone') {
+
+          }
+        }
+      });
+    }
   }
 
   getLocationCoordinates() {
@@ -179,5 +238,13 @@ export class AlertPage implements OnInit {
   getMomentValue(date: string): string {
     let myMoment: moment.Moment = moment(date);
     return myMoment.format("MMMM d");
+  }
+
+  navigateToSafeHouse(disaster: any) {
+
+  }
+
+  saveOurSoul(disaster: any) {
+    
   }
 }

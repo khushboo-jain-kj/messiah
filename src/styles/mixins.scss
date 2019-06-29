@@ -1,0 +1,7 @@
+// Mixin for the chat bot mesage
+@mixin commentBubbleRadius($borderRadiusValue) {
+    border-bottom-left-radius: $borderRadiusValue;
+    border-top-left-radius: $borderRadiusValue;
+    border-top-right-radius: $borderRadiusValue;
+    border-bottom-right-radius: $borderRadiusValue;
+}
