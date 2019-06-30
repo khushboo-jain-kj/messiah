@@ -10,7 +10,8 @@ const routes: Routes = [
   { path: 'home', loadChildren: './home/home.module#HomePageModule' },
   { path: 'list', loadChildren: './list/list.module#ListPageModule' },
   { path: 'chatbot', loadChildren: './chatbot/chatbot.module#ChatbotPageModule' },
-  { path: 'alert', loadChildren: './alert/alert.module#AlertPageModule' }
+  { path: 'alert', loadChildren: './alert/alert.module#AlertPageModule' },
+  { path: 'native-map', loadChildren: './native-map/native-map.module#NativeMapPageModule' }
 ];
 
 @NgModule({

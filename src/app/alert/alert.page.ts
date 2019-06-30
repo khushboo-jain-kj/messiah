@@ -5,7 +5,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { DisasterModel } from '../models/disaster-model';
-import { AlertController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-alert',
@@ -25,7 +25,8 @@ export class AlertPage implements OnInit {
     public locationAccuracy: LocationAccuracy,
     public geolocation: Geolocation,
     public weatherService: WeatherService,
-    public alertController: AlertController) {
+    public alertController: AlertController,
+    public navCtrl: NavController) {
     this.locationCoords = {};
 
     this.locationCoords.lattitude = 40.95;
@@ -247,7 +248,7 @@ export class AlertPage implements OnInit {
   }
 
   navigateToSafeHouse(disaster: any) {
-
+    this.navCtrl.navigateForward('/native-map', { queryParams: { 'disaster': disaster, 'coords': this.locationCoords } });
   }
 
   saveOurSoul(disaster: DisasterModel) {
@@ -258,7 +259,7 @@ export class AlertPage implements OnInit {
         + ' due to ' + disaster.disasterType + '. Please deploy the necessary teams on site.';
       this.weatherService.sendSms(smsText, '919874994023').subscribe(resp => {
         let data = resp.json();
-        if (data.status === true) {
+        if (data.status === "true") {
           this.isSosTriggered = true;
           this.presentAlert('Alert',
             'Emergency team notified',
