@@ -47,4 +47,15 @@ export class WeatherService {
     getNLPDataFromText(message: string) {
         return this.http.get('https://eu-gb.functions.cloud.ibm.com/api/v1/web/Khushboo.Jain%40cognizant.com_dev/default/GetNLPDataFromText.json?message=' + message);
     }
+
+    sendSms(message: string, recipentString: string) {
+        return this.http.get('https://eu-gb.functions.cloud.ibm.com/api/v1/web/Khushboo.Jain%40cognizant.com_dev/default/SendMessageService.json?message=' + message + "&phoneTo=" + recipentString);
+    }
+
+    getPlaceDetailsByGeoCode(lattitude: string, longitude: string) {
+        return this.http.get('https://api.weather.com/v3/location/search?query=' +
+            lattitude + ',' +
+            longitude +
+            '&locationType=geocode&language=en-US&format=json&apiKey=320c9252a6e642f38c9252a6e682f3c6');
+    }
 }

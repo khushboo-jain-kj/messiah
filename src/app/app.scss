@@ -1,35 +1,44 @@
 // App Styles
 // ----------------------------------------------------------------------------
-// Put style rules here that you want to apply to the entire application. These 
-// styles are for the entire app and not just one component. Additionally, this 
-// file can hold Sass mixins, functions, and placeholder classes to be imported 
+// Put style rules here that you want to apply to the entire application. These
+// styles are for the entire app and not just one component. Additionally, this
+// file can hold Sass mixins, functions, and placeholder classes to be imported
 // and used throughout the application.
 
-@import '../styles/animate.scss';
-@import '../assets/fonts/Helvetica/helvetica-font';
-@import '../assets/fonts/ProximaNova/proxima_nova-font';
-@import '../styles/mixins.scss';
+@import "../styles/animate.scss";
+@import "../assets/fonts/Helvetica/helvetica-font";
+@import "../assets/fonts/ProximaNova/proxima_nova-font";
+@import "../styles/mixins.scss";
 
-h1, h2, h3, h4, h5, h6,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
 ion-card-title {
-    font-family: 'Proxima Nova Semibold';
+  font-family: "Proxima Nova Semibold";
 }
 
-span, p, ion-content, ion-title, div {
-    font-family: 'Helvetica 55 Roman';
+span,
+p,
+ion-content,
+ion-title,
+div {
+  font-family: "Helvetica 55 Roman";
 }
 
 .user-icon {
-    width: 30%;
-    height: 30%;
-    margin-left: 35%;
+  width: 30%;
+  height: 30%;
+  margin-left: 35%;
 }
 
 .application-left-menu-header {
-    ion-card-title {
-        text-align: center;
-    }
-    ion-col {
-        text-align: center;
-    }
+  ion-card-title {
+    text-align: center;
+  }
+  ion-col {
+    text-align: center;
+  }
 }

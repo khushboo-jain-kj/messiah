@@ -5,7 +5,7 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { DisasterModel } from '../models/disaster-model';
-import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-alert',
@@ -19,18 +19,24 @@ export class AlertPage implements OnInit {
   disasters: Array<DisasterModel> = [];
   contextNews: any;
   weatherNews: Array<any> = [];
+  isSosTriggered: boolean;
 
   constructor(public androidPermissions: AndroidPermissions,
     public locationAccuracy: LocationAccuracy,
     public geolocation: Geolocation,
-    public weatherService: WeatherService) {
+    public weatherService: WeatherService,
+    public alertController: AlertController) {
     this.locationCoords = {};
+
+    this.locationCoords.lattitude = 40.95;
+    this.locationCoords.longitude = -87.4;
   }
 
   ngOnInit() {
     //this.checkGPSPermission();
     this.disasters = [];
     this.getWeatherNews();
+    this.resetVariables();
   }
 
   getHomeScreenData() {
@@ -244,7 +250,35 @@ export class AlertPage implements OnInit {
 
   }
 
-  saveOurSoul(disaster: any) {
-    
+  saveOurSoul(disaster: DisasterModel) {
+    this.weatherService.getPlaceDetailsByGeoCode(this.locationCoords.lattitude, this.locationCoords.longitude).subscribe(resp => {
+      let data = resp.json();
+      let smsText: string = 'There is a SOS signal coming from '
+        + data.location.address[0]
+        + ' due to ' + disaster.disasterType + '. Please deploy the necessary teams on site.';
+      this.weatherService.sendSms(smsText, '919874994023').subscribe(resp => {
+        let data = resp.json();
+        if (data.status === true) {
+          this.isSosTriggered = true;
+          this.presentAlert('Alert',
+            'Emergency team notified',
+            'The emergency rescue and medical teams have been notified. Please wait till they reach and rescue you safely.');
+        }
+      });
+    });
+  }
+
+  async presentAlert(headerText: string, subtitle: string, message: string) {
+    const alert = await this.alertController.create({
+      header: headerText,
+      subHeader: subtitle,
+      message: message,
+      buttons: ['Ok']
+    });
+    await alert.present();
+  }
+
+  resetVariables() {
+    this.isSosTriggered = false;
   }
 }

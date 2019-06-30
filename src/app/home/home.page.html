@@ -8,12 +8,13 @@
         </ion-title>
     </ion-toolbar>
 </ion-header>
-
-<ion-card *ngIf="weatherData" [attr.color]="weatherData.dayOrNight === 'D'? 'light' : 'medium'"
+<i class="wi wi-day-sunny"></i>
+<ion-card *ngIf="weatherData" [attr.color]="weatherData.dayOrNight === 'D'? 'primary' : 'dark'"
     (click)="toggleWeatherDetails()">
     <ion-card-header>
         <ion-card-title>{{weatherData.temperature}}&deg;C</ion-card-title>
         <ion-card-subtitle>{{weatherData.cloudCoverPhrase}}</ion-card-subtitle>
+        <icon class="icon icon-svg icon-svg-light icon-foggy icon-21"></icon>
     </ion-card-header>
     <ion-card-content *ngIf="isWeatherDetailsExpanded">
         <ion-grid class="weather-data-details">

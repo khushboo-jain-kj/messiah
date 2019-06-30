@@ -37,6 +37,7 @@ ion-card {
 }
 
 .weather-data-details {
+  transition: height 0.5s ease;
   padding: 0;
   > ion-row {
     padding-bottom: 10px;

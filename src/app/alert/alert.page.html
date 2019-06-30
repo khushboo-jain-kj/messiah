@@ -10,17 +10,28 @@
 </ion-header>
 
 <ion-content>
-    <ion-card *ngFor="let disaster of disasters" color='danger'>
-        <ion-card-header>
-            <ion-card-title>{{disaster.disasterType}} warning</ion-card-title>
-            <ion-card-subtitle>{{disaster.disasterType}} warning near {{disaster.disasterLocation}}</ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content class="disaster-action-items">
-            <ion-icon name="navigate" (click)="navigateToSafeHouse(disaster)"></ion-icon>
-            <div class="sos-icon" (click)="saveOurSoul(disaster)">SOS</div>
-        </ion-card-content>
-    </ion-card>
-
+    <div *ngIf="!isSosTriggered">
+        <ion-card *ngFor="let disaster of disasters" color='danger'>
+            <ion-card-header>
+                <ion-card-title>{{disaster.disasterType}} warning</ion-card-title>
+                <ion-card-subtitle>{{disaster.disasterType}} warning near {{disaster.disasterLocation}}
+                </ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content class="disaster-action-items">
+                <ion-icon name="navigate" (click)="navigateToSafeHouse(disaster)"></ion-icon>
+                <div class="sos-icon" (click)="saveOurSoul(disaster)">SOS</div>
+            </ion-card-content>
+        </ion-card>
+    </div>
+    <div *ngIf="isSosTriggered">
+        <ion-card>
+            <ion-card-header>
+                <ion-card-title>
+                    SOS Triggered
+                </ion-card-title>
+            </ion-card-header>
+        </ion-card>
+    </div>
     <ion-card *ngFor="let news of weatherNews">
         <ion-card-header>
             <ion-card-title>{{news.severity}} {{news.eventDescription}}</ion-card-title>
