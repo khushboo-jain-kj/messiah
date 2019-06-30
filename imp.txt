@@ -5,6 +5,13 @@ https://www.djamware.com/post/5c6ccd1f80aca754f7a9d1ec/push-notification-using-i
 
 https://mapsplugin.github.io/ionic-googlemaps-quickdemo-v4/polygon --- map demo
 
+
+https://github.com/DIEUDONNE-DENGUN/DenPlaces/blob/master/src/pages/hospital/hospital.ts
+
+https://www.joshmorony.com/create-a-nearby-places-list-with-google-maps-in-ionic-2-part-1/
+
+https://codepen.io/jasonmayes/pen/DupCH
+
 //algo for checking if currnet loc inside polygon
 pointInPolygon(polygonPath, coordinates) {
         let numberOfVertexs = polygonPath.length - 1;
