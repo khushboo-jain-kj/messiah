@@ -31,10 +31,12 @@ export class NativeMapPage implements OnInit {
 
       });
     this.initMap();
+
     this.insidePoly = this.pointInsidePolygon(this.polygonPts, this.locationCoords);
     let loc: LatLng;
-    if (this.locationCoords.latitude && this.locationCoords.longitude) {
-      loc = new LatLng(this.locationCoords.latitude, this.locationCoords.longitude);
+
+    if (this.locationCoords.lattitude && this.locationCoords.longitude) {
+      loc = new LatLng(this.locationCoords.lattitude, this.locationCoords.longitude);
       this.moveCamera(loc);
       this.createMarker(loc, 'You are here').then((marker: Marker) => {
         marker.showInfoWindow();
@@ -61,10 +63,7 @@ export class NativeMapPage implements OnInit {
   initMap() {
     this.map = GoogleMaps.create('map', {
       camera: {
-        target: {
-          lat: 43.0741704,
-          lng: -89.3809802
-        },
+        target: this.polygonPts,
         zoom: 10
       }
     });
@@ -84,8 +83,7 @@ export class NativeMapPage implements OnInit {
   moveCamera(loc: LatLng) {
     let options = {
       target: loc,
-      zoom: 15,
-      tilt: 10
+      zoom: 10
     }
     this.map.moveCamera(options);
   }
