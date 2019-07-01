@@ -35,3 +35,11 @@ pointInPolygon(polygonPath, coordinates) {
 
         return inside;
 }            
+
+
+
+
+
+// ML API
+
+https://eu-gb.functions.cloud.ibm.com/api/v1/web/Ankita.Ghosh%40cognizant.com_dev/default/GetFloodPredictionV1.json
