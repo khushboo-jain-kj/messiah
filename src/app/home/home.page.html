@@ -9,12 +9,11 @@
     </ion-toolbar>
 </ion-header>
 <i class="wi wi-day-sunny"></i>
-<ion-card *ngIf="weatherData" [attr.color]="weatherData.dayOrNight === 'D'? 'primary' : 'dark'"
-    (click)="toggleWeatherDetails()">
+<ion-card *ngIf="weatherData" [attr.color]="weatherData.dayOrNight === 'D'? 'primary' : 'dark'" (click)="toggleWeatherDetails()">
     <ion-card-header>
         <ion-card-title>{{weatherData.temperature}}&deg;C</ion-card-title>
         <ion-card-subtitle>{{weatherData.cloudCoverPhrase}}</ion-card-subtitle>
-        <icon class="icon icon-svg icon-svg-light icon-foggy icon-21"></icon>
+        <ion-icon class="icon icon-svg icon-svg-light icon-foggy icon-21"></ion-icon>
     </ion-card-header>
     <ion-card-content *ngIf="isWeatherDetailsExpanded">
         <ion-grid class="weather-data-details">
@@ -93,7 +92,9 @@
 
 <ion-content>
     <ion-fab vertical="bottom" horizontal="end">
-        <ion-fab-button><ion-icon name="apps"></ion-icon></ion-fab-button>
+        <ion-fab-button>
+            <ion-icon name="apps"></ion-icon>
+        </ion-fab-button>
         <ion-fab-list side="top">
             <ion-fab-button (click)="setOverlayMap('wind')">Wind</ion-fab-button>
             <ion-fab-button (click)="setOverlayMap('temp')">Temperature</ion-fab-button>

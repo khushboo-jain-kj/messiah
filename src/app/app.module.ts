@@ -10,11 +10,13 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { GoogleMaps } from '@ionic-native/google-maps';
+import { Network } from '@ionic-native/network/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { WeatherService } from './services/weather.service';
+import { NetworkService } from './services/network.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,8 +34,10 @@ import { WeatherService } from './services/weather.service';
     Geolocation,
     LocationAccuracy,
     GoogleMaps,
+    Network,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    WeatherService
+    WeatherService,
+    NetworkService
   ],
   bootstrap: [AppComponent]
 })

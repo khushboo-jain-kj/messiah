@@ -11,7 +11,8 @@ const routes: Routes = [
   { path: 'list', loadChildren: './list/list.module#ListPageModule' },
   { path: 'chatbot', loadChildren: './chatbot/chatbot.module#ChatbotPageModule' },
   { path: 'alert', loadChildren: './alert/alert.module#AlertPageModule' },
-  { path: 'native-map', loadChildren: './native-map/native-map.module#NativeMapPageModule' }
+  { path: 'native-map', loadChildren: './native-map/native-map.module#NativeMapPageModule' },
+  { path: 'no-network', loadChildren: './no-network/no-network.module#NoNetworkPageModule' }
 ];
 
 @NgModule({
