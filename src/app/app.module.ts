@@ -11,6 +11,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { GoogleMaps } from '@ionic-native/google-maps';
 import { Network } from '@ionic-native/network/ngx';
+import { Camera } from '@ionic-native/camera/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -35,6 +36,7 @@ import { NetworkService } from './services/network.service';
     LocationAccuracy,
     GoogleMaps,
     Network,
+    Camera,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     WeatherService,
     NetworkService

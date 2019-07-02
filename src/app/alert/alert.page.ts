@@ -4,8 +4,9 @@ import * as moment from 'moment';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { DisasterModel } from '../models/disaster-model';
-import { AlertController, NavController } from '@ionic/angular';
+import { AlertController, NavController, ActionSheetController } from '@ionic/angular';
 
 @Component({
   selector: 'app-alert',
@@ -14,7 +15,7 @@ import { AlertController, NavController } from '@ionic/angular';
 })
 export class AlertPage implements OnInit {
 
-  locationCoords: any;
+  // locationCoords: any;
   powerDisruptionData: any;
   disasters: Array<DisasterModel> = [];
   contextNews: any;
@@ -26,11 +27,12 @@ export class AlertPage implements OnInit {
     public geolocation: Geolocation,
     public weatherService: WeatherService,
     public alertController: AlertController,
-    public navCtrl: NavController) {
-    this.locationCoords = {};
+    public navCtrl: NavController,
+    public actionSheetController: ActionSheetController,
+    public camera: Camera) {
 
-    this.locationCoords.lattitude = 40.95;
-    this.locationCoords.longitude = -87.4;
+    WeatherService.locationCoords.lattitude = 43.38
+    WeatherService.locationCoords.longitude = -96.23;
   }
 
   ngOnInit() {
@@ -41,8 +43,8 @@ export class AlertPage implements OnInit {
   }
 
   getHomeScreenData() {
-    this.getWeatherNews(this.locationCoords.latitude, this.locationCoords.longitude);
-    this.getPowerDisruptionForNext30Days(this.locationCoords.latitude, this.locationCoords.longitude);
+    this.getWeatherNews(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude);
+    this.getPowerDisruptionForNext30Days(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude);
   }
 
   getPowerDisruptionForNext30Days(lattitude?: any, longitude?: any) {
@@ -53,17 +55,18 @@ export class AlertPage implements OnInit {
   }
 
   getWeatherNews(lattitude?: any, longitude?: any) {
-    lattitude = 40.95;
-    longitude = -87.4;
+    lattitude = WeatherService.locationCoords.lattitude;
+    longitude = WeatherService.locationCoords.longitude;
 
     // Retrieve the weather news at first. This brings out the weather headlines to display to the user.
     this.weatherService.getNewsByCord(lattitude.toString(), longitude.toString()).subscribe(newsData => {
       let data = newsData.json();
       this.weatherNews = data ? data.alerts : [];
+
       // this.weatherNews = [];
-      if (this.weatherNews.length === 0) {
-        this.getWeatherHeadLinesHardCodeData();
-      }
+      // if (this.weatherNews.length === 0) {
+      //   this.getWeatherHeadLinesHardCodeData();
+      // }
       (this.weatherNews as Array<any>).forEach(element => {
         this.contextNews = element;
         this.getNewsDetails(element);
@@ -104,7 +107,7 @@ export class AlertPage implements OnInit {
         }
       },
       err => {
-        alert(err);
+    //    alert(err);
       }
     );
   }
@@ -117,14 +120,14 @@ export class AlertPage implements OnInit {
         //Show 'GPS Permission Request' dialogue
         this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
           .then(
-            () => {
-              // call method to turn on GPS
-              this.askToTurnOnGPS();
-            },
-            error => {
-              //Show alert if user click on 'No Thanks'
-              alert('requestPermission Error requesting location permissions ' + error)
-            }
+          () => {
+            // call method to turn on GPS
+            this.askToTurnOnGPS();
+          },
+          error => {
+            //Show alert if user click on 'No Thanks'
+         //   alert('requestPermission Error requesting location permissions ' + error)
+          }
           );
       }
     });
@@ -136,7 +139,7 @@ export class AlertPage implements OnInit {
         // When GPS Turned ON call method to get Accurate location coordinates
         this.getLocationCoordinates()
       },
-      error => alert('Error requesting location permissions ' + JSON.stringify(error))
+   //   error => alert('Error requesting location permissions ' + JSON.stringify(error))
     );
   }
 
@@ -145,6 +148,7 @@ export class AlertPage implements OnInit {
     this.weatherService.getSentimentByMessage(news.severity + ' ' + news.headlineText).subscribe(res => {
       response = res.json();
       this.getDisasterModel(response, news);
+
     });
   }
 
@@ -161,6 +165,7 @@ export class AlertPage implements OnInit {
     if (toneArray.length > 0) {
       toneArray.forEach(element => {
         if (element === 'Anger' || element === 'Fear') {
+
           this.populateDisasterModel(news);
         }
       });
@@ -211,7 +216,7 @@ export class AlertPage implements OnInit {
 
       // Populate the disaster location and the disaster coordinate location details
       (nlpResult.entities as any).forEach(entity => {
-        if (entity.type === 'GeographicFeature') {
+        if (true) {
           let index: number = this.findWithAttr(this.disasters, 'disasterType', _disasterType);
           this.disasters[index].disasterLocation = entity.text;
 
@@ -228,19 +233,19 @@ export class AlertPage implements OnInit {
 
   getLocationCoordinates() {
     this.geolocation.getCurrentPosition().then((resp) => {
-      this.locationCoords.latitude = resp.coords.latitude;
-      this.locationCoords.longitude = resp.coords.longitude;
-      this.locationCoords.accuracy = resp.coords.accuracy;
-      this.locationCoords.timestamp = resp.timestamp;
+      WeatherService.locationCoords.lattitude = resp.coords.latitude;
+      WeatherService.locationCoords.longitude = resp.coords.longitude;
+      WeatherService.locationCoords.accuracy = resp.coords.accuracy;
+      WeatherService.locationCoords.timestamp = resp.timestamp;
       this.getHomeScreenData();
     }).catch((error) => {
-      alert('Error getting location' + error);
+    //  alert('Error getting location' + error);
     });
   }
 
-  getWeatherHeadLinesHardCodeData() {
-    this.weatherNews.push(JSON.parse("{\"detailKey\":\"eab809ea-01a2-3901-88a3-f1883c4bc6d2\",\"messageTypeCode\":2,\"messageType\":\"Update\",\"productIdentifier\":\"FLS\",\"phenomena\":\"FL\",\"significance\":\"W\",\"eventTrackingNumber\":\"0130\",\"officeCode\":\"KLOT\",\"officeName\":\"Chicago\",\"officeAdminDistrict\":\"Illinois\",\"officeAdminDistrictCode\":\"IL\",\"officeCountryCode\":\"US\",\"eventDescription\":\"River Flood Warning\",\"severityCode\":2,\"severity\":\"Severe\",\"categories\":[{\"category\":\"Met\",\"categoryCode\":2}],\"responseTypes\":[{\"responseType\":\"Avoid\",\"responseTypeCode\":5},{\"responseType\":\"Evacuate\",\"responseTypeCode\":2}],\"urgency\":\"Unknown\",\"urgencyCode\":5,\"certainty\":\"Unknown\",\"certaintyCode\":5,\"effectiveTimeLocal\":null,\"effectiveTimeLocalTimeZone\":null,\"expireTimeLocal\":\"2019-06-28T01:00:00-05:00\",\"expireTimeLocalTimeZone\":\"CDT\",\"expireTimeUTC\":1561701600,\"onsetTimeLocal\":null,\"onsetTimeLocalTimeZone\":null,\"flood\":{\"floodLocationId\":\"SLBI3\",\"floodLocationName\":\"Kankakee River at Shelby\",\"floodSeverityCode\":\"1\",\"floodSeverity\":\"Minor\",\"floodImmediateCauseCode\":\"ER\",\"floodImmediateCause\":\"Excessive Rainfall\",\"floodRecordStatusCode\":\"NO\",\"floodRecordStatus\":\"A record flood is not expected\",\"floodStartTimeLocal\":\"2019-06-21T03:15:00-05:00\",\"floodStartTimeLocalTimeZone\":\"CDT\",\"floodCrestTimeLocal\":\"2019-06-24T21:15:00-05:00\",\"floodCrestTimeLocalTimeZone\":\"CDT\",\"floodEndTimeLocal\":\"2019-06-27T19:00:00-05:00\",\"floodEndTimeLocalTimeZone\":\"CDT\"},\"areaTypeCode\":\"C\",\"latitude\":40.95,\"longitude\":-87.4,\"areaId\":\"INC111\",\"areaName\":\"Newton County\",\"ianaTimeZone\":\"America/Chicago\",\"adminDistrictCode\":\"IN\",\"adminDistrict\":\"Indiana\",\"countryCode\":\"US\",\"countryName\":\"UNITED STATES OF AMERICA\",\"headlineText\":\"River Flood Warning until FRI 1:00 AM CDT\",\"source\":\"National Weather Service\",\"disclaimer\":null,\"issueTimeLocal\":\"2019-06-26T21:30:00-05:00\",\"issueTimeLocalTimeZone\":\"CDT\",\"identifier\":\"19f5be234b4e87bcbf9bce6a1b5d2fba\",\"processTimeUTC\":1561602623}"));
-  }
+  // getWeatherHeadLinesHardCodeData() {
+  //   this.weatherNews.push(JSON.parse("{\"detailKey\":\"eab809ea-01a2-3901-88a3-f1883c4bc6d2\",\"messageTypeCode\":2,\"messageType\":\"Update\",\"productIdentifier\":\"FLS\",\"phenomena\":\"FL\",\"significance\":\"W\",\"eventTrackingNumber\":\"0130\",\"officeCode\":\"KLOT\",\"officeName\":\"Chicago\",\"officeAdminDistrict\":\"Illinois\",\"officeAdminDistrictCode\":\"IL\",\"officeCountryCode\":\"US\",\"eventDescription\":\"River Flood Warning\",\"severityCode\":2,\"severity\":\"Severe\",\"categories\":[{\"category\":\"Met\",\"categoryCode\":2}],\"responseTypes\":[{\"responseType\":\"Avoid\",\"responseTypeCode\":5},{\"responseType\":\"Evacuate\",\"responseTypeCode\":2}],\"urgency\":\"Unknown\",\"urgencyCode\":5,\"certainty\":\"Unknown\",\"certaintyCode\":5,\"effectiveTimeLocal\":null,\"effectiveTimeLocalTimeZone\":null,\"expireTimeLocal\":\"2019-06-28T01:00:00-05:00\",\"expireTimeLocalTimeZone\":\"CDT\",\"expireTimeUTC\":1561701600,\"onsetTimeLocal\":null,\"onsetTimeLocalTimeZone\":null,\"flood\":{\"floodLocationId\":\"SLBI3\",\"floodLocationName\":\"Kankakee River at Shelby\",\"floodSeverityCode\":\"1\",\"floodSeverity\":\"Minor\",\"floodImmediateCauseCode\":\"ER\",\"floodImmediateCause\":\"Excessive Rainfall\",\"floodRecordStatusCode\":\"NO\",\"floodRecordStatus\":\"A record flood is not expected\",\"floodStartTimeLocal\":\"2019-06-21T03:15:00-05:00\",\"floodStartTimeLocalTimeZone\":\"CDT\",\"floodCrestTimeLocal\":\"2019-06-24T21:15:00-05:00\",\"floodCrestTimeLocalTimeZone\":\"CDT\",\"floodEndTimeLocal\":\"2019-06-27T19:00:00-05:00\",\"floodEndTimeLocalTimeZone\":\"CDT\"},\"areaTypeCode\":\"C\",\"latitude\":40.95,\"longitude\":-87.4,\"areaId\":\"INC111\",\"areaName\":\"Newton County\",\"ianaTimeZone\":\"America/Chicago\",\"adminDistrictCode\":\"IN\",\"adminDistrict\":\"Indiana\",\"countryCode\":\"US\",\"countryName\":\"UNITED STATES OF AMERICA\",\"headlineText\":\"River Flood Warning until FRI 1:00 AM CDT\",\"source\":\"National Weather Service\",\"disclaimer\":null,\"issueTimeLocal\":\"2019-06-26T21:30:00-05:00\",\"issueTimeLocalTimeZone\":\"CDT\",\"identifier\":\"19f5be234b4e87bcbf9bce6a1b5d2fba\",\"processTimeUTC\":1561602623}"));
+  // }
 
   getMomentValue(date: string): string {
     let myMoment: moment.Moment = moment(date);
@@ -248,11 +253,11 @@ export class AlertPage implements OnInit {
   }
 
   navigateToSafeHouse(disaster: any) {
-    this.navCtrl.navigateForward('/native-map', { queryParams: { 'disaster': disaster, 'coords': this.locationCoords } });
+    this.navCtrl.navigateForward('/native-map', { queryParams: { 'disaster': disaster } });
   }
 
   saveOurSoul(disaster: DisasterModel) {
-    this.weatherService.getPlaceDetailsByGeoCode(this.locationCoords.lattitude, this.locationCoords.longitude).subscribe(resp => {
+    this.weatherService.getPlaceDetailsByGeoCode(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude).subscribe(resp => {
       let data = resp.json();
       let smsText: string = 'There is a SOS signal coming from '
         + data.location.address[0]
@@ -281,5 +286,48 @@ export class AlertPage implements OnInit {
 
   resetVariables() {
     this.isSosTriggered = false;
+  }
+
+  async openCamera() {
+    let actionsheet = await this.actionSheetController.create({
+      header: "Choose Album",
+      buttons: [{
+        text: 'Camera',
+        handler: () => {
+         this.takePhoto(1);
+        }
+      }, {
+        text: 'Gallery',
+        handler: ()=> {
+          this.takePhoto(0);
+        }
+      }]
+    });
+    await actionsheet.present();
+    // Step 1: Open camera and click image/select from gallery
+    // Step 2: Call image analysis service and post the image to get nlpResult
+    // Step 3: If there is a match in any disaster >0.6 Trigger sms 
+
+    let smsText: string = 'There is a possible {disaster_name} situation near {location}. Please check the validity of the news.';
+  }
+
+  //take Photo
+  takePhoto(sourceType: number) {
+    const options: CameraOptions = {
+      quality: 50,
+      destinationType: this.camera.DestinationType.DATA_URL,
+      encodingType: this.camera.EncodingType.JPEG,
+      mediaType: this.camera.MediaType.PICTURE,
+      correctOrientation: true,
+      sourceType: sourceType,
+    }
+
+    this.camera.getPicture(options).then((imageData) => {
+      let base64Image = 'data:image/jpeg;base64,' + imageData;
+      alert('Image'+imageData);
+      alert('Base64'+base64Image);
+    }, (err) => {
+      // Handle error
+    });
   }
 }

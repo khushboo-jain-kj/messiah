@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 import { GoogleMaps, GoogleMap, CameraPosition, LatLng, GoogleMapsEvent, Marker, MarkerOptions, ILatLng, Polygon } from '@ionic-native/google-maps';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { WeatherService } from '../services/weather.service';
 
 
 @Component({
@@ -13,7 +14,6 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 export class NativeMapPage implements OnInit {
   @ViewChild('map') mapElement: any;
   disaster: any;
-  locationCoords: any;
   map: GoogleMap;
   polygonPts: ILatLng[];
   insidePoly: any;
@@ -24,7 +24,6 @@ export class NativeMapPage implements OnInit {
     this.route.queryParams
       .subscribe(params => {
         this.disaster = params['disaster'];
-        this.locationCoords = params['coords'];
         this.disaster.disasterAreaPolygonCoordinates.forEach(polyPts => {
           this.polygonPts.push(new LatLng(polyPts.lat, polyPts.lon));
         });
@@ -32,11 +31,11 @@ export class NativeMapPage implements OnInit {
       });
     this.initMap();
 
-    this.insidePoly = this.pointInsidePolygon(this.polygonPts, this.locationCoords);
+    this.insidePoly = this.pointInsidePolygon(this.polygonPts, WeatherService.locationCoords);
     let loc: LatLng;
 
-    if (this.locationCoords.lattitude && this.locationCoords.longitude) {
-      loc = new LatLng(this.locationCoords.lattitude, this.locationCoords.longitude);
+    if (WeatherService.locationCoords.lattitude && WeatherService.locationCoords.longitude) {
+      loc = new LatLng(WeatherService.locationCoords.lattitude,WeatherService.locationCoords.longitude);
       this.moveCamera(loc);
       this.createMarker(loc, 'You are here').then((marker: Marker) => {
         marker.showInfoWindow();
@@ -69,8 +68,8 @@ export class NativeMapPage implements OnInit {
     });
     let polygon: Polygon = this.map.addPolygonSync({
       'points': this.polygonPts,
-      'strokeColor': '#AA00FF',
-      'fillColor': '#00FFAA',
+      'strokeColor': '#FF453A',
+      'fillColor': '#FF453A',
       'strokeWidth': 10
     });
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
@@ -13,6 +13,7 @@ declare var windyInit: any;
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 
 
@@ -21,7 +22,7 @@ export class HomePage {
   mapHidden = true;
   windyMap: any;
   windyMarkers: any;
-  locationCoords: any;
+  // locationCoords: any;
   autocomplete: any;
   autocompleteItems: any = [];
   weatherData: any;
@@ -30,29 +31,31 @@ export class HomePage {
 
   constructor(public androidPermissions: AndroidPermissions, public locationAccuracy: LocationAccuracy,
     public geolocation: Geolocation, private weatherService: WeatherService) {
-    
-    this.locationCoords = {};
+
+    //  this.locationCoords = {};
     this.autocomplete = '';
     this.autocompleteItems = [];
   }
 
   ionViewDidEnter() {
     document
-    .getElementById('windycontainer')
-    .appendChild(document.getElementById('windy'));
+      .getElementById('windycontainer')
+      .appendChild(document.getElementById('windy'));
+    if (!WeatherService.locationCoords.lattitude && !WeatherService.locationCoords.longitude) {
+      this.checkGPSPermission();
+    }
 
-    this.checkGPSPermission();
-    
+
     setTimeout(() => {
       this.windyMap = WeatherService.windyMap;
-      this.setWindyMap('22.57', '88.43');
+      this.setWindyMap(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude);
     }, 3000);
   }
 
-  ionViewDidLeave(){
+  ionViewDidLeave() {
     document
-  .getElementById('container')
-  .appendChild(document.getElementById('windy'));
+      .getElementById('container')
+      .appendChild(document.getElementById('windy'));
   }
 
   setWindyMap(lat, lng) {
@@ -136,11 +139,11 @@ export class HomePage {
 
   getLocationCoordinates() {
     this.geolocation.getCurrentPosition().then((resp) => {
-      this.locationCoords.latitude = resp.coords.latitude;
-      this.locationCoords.longitude = resp.coords.longitude;
-      this.locationCoords.accuracy = resp.coords.accuracy;
-      this.locationCoords.timestamp = resp.timestamp;
-      this.setWindyMap(this.locationCoords.latitude, this.locationCoords.longitude);
+      WeatherService.locationCoords.lattitude = resp.coords.latitude;
+      WeatherService.locationCoords.longitude = resp.coords.longitude;
+      WeatherService.locationCoords.accuracy = resp.coords.accuracy;
+      WeatherService.locationCoords.timestamp = resp.timestamp;
+      this.setWindyMap(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude);
     }).catch((error) => {
       alert('Error getting location' + error);
     });
@@ -186,6 +189,6 @@ export class HomePage {
   }
 
   toggleWeatherDetails() {
-    this.isWeatherDetailsExpanded = ! this.isWeatherDetailsExpanded;
+    this.isWeatherDetailsExpanded = !this.isWeatherDetailsExpanded;
   }
 }

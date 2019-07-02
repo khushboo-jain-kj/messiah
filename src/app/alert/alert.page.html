@@ -23,6 +23,14 @@
             </ion-card-content>
         </ion-card>
     </div>
+    <div>
+        <ion-card *ngFor="let disaster of disasters" color='warning'>
+            <ion-card-header>
+                <ion-card-title>Report an incident</ion-card-title>
+            </ion-card-header>
+            <ion-icon name="camera" class="camera-icon" (click)="openCamera()"></ion-icon>
+        </ion-card>
+    </div>
     <div *ngIf="isSosTriggered">
         <ion-card>
             <ion-card-header>

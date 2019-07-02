@@ -12,7 +12,9 @@ const routes: Routes = [
   { path: 'chatbot', loadChildren: './chatbot/chatbot.module#ChatbotPageModule' },
   { path: 'alert', loadChildren: './alert/alert.module#AlertPageModule' },
   { path: 'native-map', loadChildren: './native-map/native-map.module#NativeMapPageModule' },
-  { path: 'no-network', loadChildren: './no-network/no-network.module#NoNetworkPageModule' }
+  { path: 'no-network', loadChildren: './no-network/no-network.module#NoNetworkPageModule' },
+  { path: 'missing-person', loadChildren: './missing-person/missing-person.module#MissingPersonPageModule' },
+  { path: 'signup', loadChildren: './signup/signup.module#SignupPageModule' }
 ];
 
 @NgModule({

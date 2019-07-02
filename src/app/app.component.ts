@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+import {Location} from '@angular/common';
 import { Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
@@ -30,7 +30,7 @@ export class AppComponent {
       icon: 'thunderstorm'
     },
     {
-      title: 'Places near me',
+      title: 'Safe homes near me',
       url: '/list',
       icon: 'map'
     },
@@ -47,7 +47,8 @@ export class AppComponent {
     private statusBar: StatusBar,
     private weatherService: WeatherService,
     public networkService: NetworkService,
-    public router: Router
+    public router: Router,
+    public _loc:Location
   ) {
     this.initializeApp();
   }
@@ -81,7 +82,8 @@ export class AppComponent {
     if (!connected) {
       this.router.navigate(['/no-network']);
     } else {
-      this.router.navigate(['/alert']);
+     // this.router.navigate(['/alert']);
+     this._loc.back();
     }
   }
 }

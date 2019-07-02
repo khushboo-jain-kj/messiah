@@ -9,6 +9,7 @@ export class WeatherService {
 
     public static windyMap: any;
     public static chatSessionId: string;
+    public static locationCoords:any={};
 
     constructor(private http: Http) { }
 
@@ -57,5 +58,14 @@ export class WeatherService {
             lattitude + ',' +
             longitude +
             '&locationType=geocode&language=en-US&format=json&apiKey=320c9252a6e642f38c9252a6e682f3c6');
+    }
+
+    getFloodPredictionMlData() {
+        // To do pass the proper values calculated
+        return this.http.get('https://eu-gb.functions.cloud.ibm.com/api/v1/web/Ankita.Ghosh%40cognizant.com_dev/default/GetFloodPredictionV1.json');
+    }
+
+    getDisasterImageAnalysisData() {
+        
     }
 }

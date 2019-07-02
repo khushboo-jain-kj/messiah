@@ -1,12 +1,12 @@
 #windy {
     width: 100%;
     height: 80%;
-    /deep/#logo,
-    /deep/#open-in-app,
-    /deep/ #mobile-ovr-select {
+    #logo,
+    #open-in-app,
+    #mobile-ovr-select {
         display: none !important;
     }
-    /deep/ section {
+    section {
         display: none !important;
     }
 }
@@ -25,7 +25,6 @@ ion-list.autocomplete-result {
 // }
 ion-card {
     >ion-card-header {
-        text-align: center;
         >ion-card-title {
             font-family: "Helvetica 55 Roman" !important;
         }
@@ -59,9 +58,9 @@ ion-card {
                 }
                 &:last-child {
                     color: #ffffff;
-                    font-size: 28px;
+                    font-size: 20px;
                     >span {
-                        font-size: 24px;
+                        font-size: 15px;
                     }
                 }
             }
