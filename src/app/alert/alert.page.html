@@ -10,51 +10,41 @@
 </ion-header>
 
 <ion-content>
-    <div *ngIf="!isSosTriggered">
-        <ion-card *ngFor="let disaster of disasters" color='danger'>
-            <ion-card-header>
-                <ion-card-title>{{disaster.disasterType}} warning</ion-card-title>
-                <ion-card-subtitle>{{disaster.disasterType}} warning near {{disaster.disasterLocation}}
-                </ion-card-subtitle>
-            </ion-card-header>
-            <ion-card-content class="disaster-action-items">
-                <ion-icon name="navigate" (click)="navigateToSafeHouse(disaster)"></ion-icon>
-                <div class="sos-icon" (click)="saveOurSoul(disaster)">SOS</div>
-            </ion-card-content>
-        </ion-card>
-    </div>
-    <div>
-        <ion-card *ngFor="let disaster of disasters" color='warning'>
-            <ion-card-header>
-                <ion-card-title>Report an incident</ion-card-title>
-            </ion-card-header>
-            <ion-icon name="camera" class="camera-icon" (click)="openCamera()"></ion-icon>
-        </ion-card>
-    </div>
-    <div *ngIf="isSosTriggered">
-        <ion-card>
-            <ion-card-header>
-                <ion-card-title>
-                    SOS Triggered
-                </ion-card-title>
-            </ion-card-header>
-        </ion-card>
-    </div>
+
     <ion-card *ngFor="let news of weatherNews">
+        <ion-card-header (click)="openNewsDetail(news)">
+            <ion-item>
+                <ion-card-title>{{news.eventDescription}}</ion-card-title><br>
+                <ion-icon name="arrow-down" slot="start" *ngIf="news.isOpen===1"></ion-icon>
+                <ion-icon name="arrow-forward" slot="start" *ngIf="news.isOpen===0"></ion-icon>
+                <p *ngIf="news.tone">{{news.tone}}</p>
+            </ion-item>
+        </ion-card-header>
+        <ion-card-content *ngIf="news.isOpen===1">
+            <p class="news-text">{{news.detail.description}}</p>
+            <p class="card-footer">Source - {{news.detail.source}}</p>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-card>
         <ion-card-header>
-            <ion-card-title>{{news.severity}} {{news.eventDescription}}</ion-card-title>
-            <ion-card-subtitle>{{news.messageType}} - {{getMomentValue(news.issueTimeLocal)}}</ion-card-subtitle>
+            <ion-item>
+                <ion-card-title>Flood Prediction</ion-card-title><br>
+
+            </ion-item>
         </ion-card-header>
         <ion-card-content>
-            <p class="headlines-text">{{news.areaName}}, {{news.adminDistrict}} : {{news.headlineText}}</p>
-            <div *ngIf="news.responseTypes && news.responseTypes.length > 0">
-                <ion-badge color="light" *ngFor="let response of news.responseTypes">#{{response.responseType}}&nbsp;
-                </ion-badge>
-            </div>
-            <div *ngIf="news.detail && news.detail.texts && news.detail.texts.length > 0">
-                <p class="news-text" *ngFor="let newsText of news.detail.texts">{{newsText.description}}</p>
-            </div>
-            <p class="card-footer">Source - {{news.source}}</p>
+        </ion-card-content>
+    </ion-card>
+
+
+    <ion-card *ngIf="cycloneAlertPer===0">
+        <ion-card-header>
+            <ion-item>
+                <ion-card-title>Cyclone Prediction</ion-card-title><br> false
+            </ion-item>
+        </ion-card-header>
+        <ion-card-content>
         </ion-card-content>
     </ion-card>
 </ion-content>

@@ -21,24 +21,24 @@ ion-slides {
 
 .section-header {
     margin-top: 18px;
-    font-size: 24px;
+    font-size: 16px;
 }
 
 ion-card-content {
     .headlines-text {
-        font-size: 20px;
+        font-size: 15px;
         text-align: justify;
         margin-bottom: 10px;
     }
     .card-footer {
-        font-size: 14px;
+        font-size: 10px;
         float: right;
         margin-top: 15px;
     }
     .news-text {
         margin-bottom: 15px;
         margin-top: 5px;
-        font-size: 18px;
+        font-size: 12px;
         text-align: justify;
     }
 }
@@ -48,14 +48,14 @@ ion-card-content {
     >div {
         position: absolute;
         right: 20px;
-        bottom: 27px;
+        bottom: 25px;
         font-size: 50px;
     }
 }
 
 .camera-icon {
     position: absolute;
-    right: 15px;
-    font-size: 50px;
-    top: 5px;
+    right: 20px;
+    font-size: 30px;
+    top: 13px;
 }
