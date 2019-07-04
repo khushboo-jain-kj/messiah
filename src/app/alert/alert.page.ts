@@ -3,6 +3,7 @@ import { WeatherService } from '../services/weather.service';
 import * as moment from 'moment';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { AlertController, NavController, ActionSheetController, LoadingController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-alert',
@@ -23,7 +24,8 @@ export class AlertPage implements OnInit {
     public navCtrl: NavController,
     public actionSheetController: ActionSheetController,
     public loadingController: LoadingController,
-    public camera: Camera) {
+    public camera: Camera,
+    public router: Router) {
     WeatherService.locationCoords.lattitude = 40.67;
     WeatherService.locationCoords.longitude = -83.65;
     this.loaderImage = '../../assets/images/loader.gif';
@@ -40,7 +42,7 @@ export class AlertPage implements OnInit {
     this.isWeatherDetailsExpanded = !this.isWeatherDetailsExpanded;
   }
 
-  getWeatherDetails(){
+  getWeatherDetails() {
     this.weatherService.getWeatherByCord(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude).subscribe(res => {
       this.weatherData = res.json();
     }, err => { });
@@ -96,33 +98,45 @@ export class AlertPage implements OnInit {
       let AVERAGE_INCREASE_RAINFALL_MAY_TO_JUNE = this.getAverageIncreaseInRainfall((ajaxResponse.json() as any).precip24Hour);
       this.weatherService.getFloodPercentage(AVG_RAINFALL_LAST_10_DAY, MARCH_TO_MAY_RAINFALL_AVG, AVERAGE_INCREASE_RAINFALL_MAY_TO_JUNE).subscribe(data => {
         this.floodPredictionPercentage = parseFloat((data.json() as any).values[0][4]) < 0 ? 0 : parseFloat((data.json() as any).values[0][4]) * 100;
+      });
     });
-  });
-}
-
-getAverageData(precipitationData, days) {
-  var averageData = 0;
-  for (var i = 0; i <= parseInt(days); i++) {
-    averageData = parseFloat(averageData.toString()) +
-      parseFloat(precipitationData[precipitationData.length - i - 1].toString());
   }
-  return (averageData / parseInt(days));
-}
 
-getAverageIncreaseInRainfall(precipitationData) {
-  var averageData = 0;
-  let differenceSet: Array<number> = [];
-  for (var i = 0; i < precipitationData.length; i++) {
-    if (i < precipitationData.length - 1) {
-      differenceSet.push(precipitationData[i] - precipitationData[i + 1]);
+  getAverageData(precipitationData, days) {
+    var averageData = 0;
+    for (var i = 0; i <= parseInt(days); i++) {
+      averageData = parseFloat(averageData.toString()) +
+        parseFloat(precipitationData[precipitationData.length - i - 1].toString());
+    }
+    return (averageData / parseInt(days));
+  }
+
+  getAverageIncreaseInRainfall(precipitationData) {
+    var averageData = 0;
+    let differenceSet: Array<number> = [];
+    for (var i = 0; i < precipitationData.length; i++) {
+      if (i < precipitationData.length - 1) {
+        differenceSet.push(precipitationData[i] - precipitationData[i + 1]);
+      }
+    }
+    for (var i = 0; i < differenceSet.length; i++) {
+      averageData = parseFloat(averageData.toString()) +
+        parseFloat(differenceSet[differenceSet.length - i - 1].toString());
+    }
+    return (averageData / parseInt(differenceSet.length.toString()));
+  }
+
+  goToPage(no: any) {
+    if (no === 1)//safe home
+    {
+      this.router.navigate(['/list']);
+    }
+
+    if (no === 2) //chatbot
+    {
+      this.router.navigate(['/chatbot']);
     }
   }
-  for (var i = 0; i < differenceSet.length; i++) {
-    averageData = parseFloat(averageData.toString()) +
-      parseFloat(differenceSet[differenceSet.length - i - 1].toString());
-  }
-  return (averageData / parseInt(differenceSet.length.toString()));
-}
 
 }
 

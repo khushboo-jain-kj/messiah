@@ -19,7 +19,6 @@ export class ListPage implements OnInit {
   markers: any;
   mapOptions: any;
   isKM: any = 5000;
-  isType: any = "";
   latLng: any;
   nearbyMapBool = true;
 
@@ -86,8 +85,8 @@ export class ListPage implements OnInit {
   }
 
   getNearbyPlace(loc: LatLng) {
-     loc.lat = 22.57;
-     loc.lng = 88.43;
+    //loc.lat = 22.57;
+    //loc.lng = 88.43;
     let nearby = new google.maps.Map(this.nearbyMapElement.nativeElement, this.mapOptions);
     let service = new google.maps.places.PlacesService(nearby);
     service.nearbySearch({
@@ -96,6 +95,8 @@ export class ListPage implements OnInit {
       types: ['hospital']
     }, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
+        results=results.slice(0,8);
+        console.log(results);
         for (var i = 0; i < results.length; i++) {
           var place = results[i];
           let photo = place.icon;
@@ -104,7 +105,11 @@ export class ListPage implements OnInit {
             photo = photos_list[0].getUrl({ 'maxWidth': 35, 'maxHeight': 35 })
           }
 
-          let markerOptions: MarkerOptions = { position: new LatLng(place.geometry.location.lat(), place.geometry.location.lng()), title: place.name, icon: "https://maps.google.com/mapfiles/ms/icons/pink-dot.png" };
+          let markerOptions: MarkerOptions = {
+            position: new LatLng(place.geometry.location.lat(), place.geometry.location.lng()),
+            title: place.name + '\n ' + place.vicinity + '\n' + 'Type: ' + place.types[0],
+            icon: "assets/hospital.png"
+          };
           this.map.addMarker(markerOptions);
         }
       }
@@ -115,6 +120,8 @@ export class ListPage implements OnInit {
       types: ['school']
     }, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
+        results=results.slice(0,8);
+        console.log(results);
         for (var i = 0; i < results.length; i++) {
           var place = results[i];
           let photo = place.icon;
@@ -123,7 +130,37 @@ export class ListPage implements OnInit {
             photo = photos_list[0].getUrl({ 'maxWidth': 35, 'maxHeight': 35 })
           }
 
-          let markerOptions: MarkerOptions = { position: new LatLng(place.geometry.location.lat(), place.geometry.location.lng()), title: place.name, icon: "https://maps.google.com/mapfiles/ms/icons/pink-dot.png" };
+          let markerOptions: MarkerOptions = {
+            position: new LatLng(place.geometry.location.lat(), place.geometry.location.lng()),
+            title: place.name + '\n ' + place.vicinity + '\n' + 'Type: ' + place.types[0],
+            icon: "assets/school.png"
+          };
+          this.map.addMarker(markerOptions);
+        }
+      }
+    });
+
+    service.nearbySearch({
+      location: loc,
+      radius: this.isKM,
+      types: ['supermarket']
+    }, (results, status) => {
+      results=results.slice(0,8);
+      console.log(results);
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        for (var i = 0; i < results.length; i++) {
+          var place = results[i];
+          let photo = place.icon;
+          if (place.photos) {
+            let photos_list = place.photos;
+            photo = photos_list[0].getUrl({ 'maxWidth': 35, 'maxHeight': 35 })
+          }
+
+          let markerOptions: MarkerOptions = {
+            position: new LatLng(place.geometry.location.lat(), place.geometry.location.lng()),
+            title: place.name + '\n ' + place.vicinity + '\n' + 'Type: ' + place.types[0],
+            icon: "assets/grocery.png"
+          };
           this.map.addMarker(markerOptions);
         }
       }

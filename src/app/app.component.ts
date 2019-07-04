@@ -43,7 +43,7 @@ export class AppComponent {
       url: '/chatbot',
       icon: 'chatboxes'
     },
-      {
+    {
       title: 'Community Forum',
       url: '/community-forum',
       icon: 'person'
@@ -68,9 +68,9 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleLightContent();
+      this.checkGPSPermission();
       this.splashScreen.hide();
       this.networkSubscriber();
-      this.checkGPSPermission();
 
       let windyMapOptions = {
         key: 'vbuDH7tvzC2rHSjHyb4chnaNxzgT6OoD',
@@ -124,14 +124,14 @@ export class AppComponent {
         //Show 'GPS Permission Request' dialogue
         this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
           .then(
-          () => {
-            // call method to turn on GPS
-            this.askToTurnOnGPS();
-          },
-          error => {
-            //Show alert if user click on 'No Thanks'
-            //   alert('requestPermission Error requesting location permissions ' + error)
-          }
+            () => {
+              // call method to turn on GPS
+              this.askToTurnOnGPS();
+            },
+            error => {
+              //Show alert if user click on 'No Thanks'
+              //   alert('requestPermission Error requesting location permissions ' + error)
+            }
           );
       }
     });

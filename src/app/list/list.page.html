@@ -4,12 +4,25 @@
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-title>
-            List
+            Near me
         </ion-title>
     </ion-toolbar>
 </ion-header>
 
 <ion-content>
+    <ion-grid>
+        <ion-row>
+            <ion-col>
+              <img src="assets/school.png" width="30px">School
+            </ion-col>
+            <ion-col>
+                    <img src="assets/hospital.png" width="30px">Hospital
+            </ion-col>
+            <ion-col>
+                    <img src="assets/grocery.png" width="30px">Supermarket
+            </ion-col>
+        </ion-row>
+    </ion-grid>
     <div #map id="map" style="height:100%"></div>
     <div #nearbyMap id="nearbyMap" [hidden]="nearbyMapBool"></div>
 </ion-content>
