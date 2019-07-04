@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: 'alert', loadChildren: './alert/alert.module#AlertPageModule' },
   { path: 'native-map', loadChildren: './native-map/native-map.module#NativeMapPageModule' },
   { path: 'no-network', loadChildren: './no-network/no-network.module#NoNetworkPageModule' },
-  { path: 'missing-person', loadChildren: './missing-person/missing-person.module#MissingPersonPageModule' },
+  { path: 'community-forum', loadChildren: './community-forum/community-forum.module#CommunityForumPageModule' },
   { path: 'signup', loadChildren: './signup/signup.module#SignupPageModule' }
 ];
 

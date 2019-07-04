@@ -3,7 +3,7 @@ import { Http, Response, Headers } from '@angular/http';
 import { HttpHeaders } from '@angular/common/http';
 
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, delay } from 'rxjs/operators';
 import { from } from 'rxjs';
 
 
@@ -30,7 +30,7 @@ export class WeatherService {
             observer.next([{
                 tone: null,
                 detailKey: "17af8d53-1105-339c-a034-67473d45e74d",
-                eventDescription: "Flood Advisory",
+                eventDescription: "Cyclone Warning",
                 issueTimeLocal: "2019-07-03T03:03:00-04:00",
                 isOpen: 0,
                 detail: null,
@@ -44,7 +44,7 @@ export class WeatherService {
         return Observable.create(function (observer) {
             observer.next({
                 texts: [{
-                    description: "The National Weather Service in Wilmington has issued a↵↵* Flood Advisory for...↵Northeastern Auglaize County in west central Ohio...↵Southwestern Hardin County in west central Ohio...↵↵* Until 900 AM EDT.↵↵* At 302 AM EDT, radar indicated thunderstorms with heavy rain were↵moving back into the region. These thunderstorms are producing↵about an inch of rain in an hour.↵↵* Minor flooding of low-lying and poorly drained streets, highways↵and underpasses will occur. In addition, farmland near creeks,↵streams and drainage ditches will experience minor flooding.↵↵Some locations that will experience minor flooding include...↵Fort Shawnee, Alger, Waynesfield, Roundhead, Uniopolis, New↵Hampshire, St. Johns and State Route 195 at State Route 235.↵↵PRECAUTIONARY/PREPAREDNESS ACTIONS...↵↵Turn around, don't drown when encountering flooded roads. Most flood↵deaths occur in vehicles.↵↵To report flooding, go to our website at weather.gov/iln and submit↵your report via social media, when you can do so safely.",
+                    description: "The National Weather Service in Wilmington has issued a\n\n* Flood Advisory for...\nNortheastern Auglaize County in west central Ohio...\nSouthwestern Hardin County in west central Ohio...\n\n* Until 900 AM EDT.\n\n* At 302 AM EDT, radar indicated thunderstorms with heavy rain were\nmoving back into the region. These thunderstorms are producing\nabout an inch of rain in an hour.\n\n* Minor flooding of low-lying and poorly drained streets, highways\nand underpasses will occur. In addition, farmland near creeks,\nstreams and drainage ditches will experience minor flooding.\n\nSome locations that will experience minor flooding include...\nFort Shawnee, Alger, Waynesfield, Roundhead, Uniopolis, New\nHampshire, St. Johns and State Route 195 at State Route 235.\n\nPRECAUTIONARY/PREPAREDNESS ACTIONS...\n\nTurn around, don't drown when encountering flooded roads. Most flood\ndeaths occur in vehicles.\n\nTo report flooding, go to our website at weather.gov/iln and submit\nyour report via social media, when you can do so safely.",
                     source: "National Weather Service"
                 }]
             });
@@ -94,6 +94,16 @@ export class WeatherService {
                 'Authorization': 'Basic ' + btoa('apikey:tf1IDPHaG6dBxZX2TUijLvMJvMy--Q1L7raPSlwULvoO')
             })
         };
-        return this.http.get('https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2016-06-13&classifier_ids=DisasterImageModel_1262229537&url=https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Gita_2018-02-14_0150Z.jpg/260px-Gita_2018-02-14_0150Z.jpg', httpOptions);
+        return this.http.get('https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2016-06-13&classifier_ids=DisasterImageModel_1262229537&url=https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Gita_2018-02-14_0150Z.jpg/260px-Gita_2018-02-14_0150Z.jpg', httpOptions).pipe(delay(3500));
+    }
+
+    getRainfallData(lattitude: string, longitude: string) {
+        return this.http.get('https://api.weather.com/v3/wx/conditions/historical/dailysummary/30day?geocode=' + lattitude + '%2C' + longitude + '&units=m&language=en-US&format=json&apiKey=320c9252a6e642f38c9252a6e682f3c6');
+    }
+
+    getFloodPercentage(AVG_RAINFALL_LAST_10_DAY: number, MARCH_TO_MAY_RAINFALL_AVG: number, AVERAGE_INCREASE_RAINFALL_MAY_TO_JUNE: number) {
+        return this.http.get("https://eu-gb.functions.cloud.ibm.com/api/v1/web/Ankita.Ghosh%40cognizant.com_dev/default/GetFloodPredictionML.json?params.AVG_RAINFALL_LAST_10_DAY="
+            + AVG_RAINFALL_LAST_10_DAY + "&MARCH_TO_MAY_RAINFALL_AVG=" + MARCH_TO_MAY_RAINFALL_AVG + "&AVERAGE_INCREASE_RAINFALL_MAY_TO_JUNE=" + AVERAGE_INCREASE_RAINFALL_MAY_TO_JUNE
+        ).pipe(delay(3500));
     }
 }

@@ -12,6 +12,10 @@ import { AlertController, NavController, ActionSheetController, LoadingControlle
 export class AlertPage implements OnInit {
   weatherNews: Array<any> = [];
   cycloneAlertPer: number = -1;
+  floodPredictionPercentage: number = -1;
+  weatherData: any;
+  isWeatherDetailsExpanded: boolean;
+  loaderImage: string;
 
   constructor(
     public weatherService: WeatherService,
@@ -22,11 +26,24 @@ export class AlertPage implements OnInit {
     public camera: Camera) {
     WeatherService.locationCoords.lattitude = 40.67;
     WeatherService.locationCoords.longitude = -83.65;
+    this.loaderImage = '../../assets/images/loader.gif';
   }
 
   ngOnInit() {
     this.openCyclonePredectionByimage();
     this.openWeatherNews();
+    this.getWeatherDetails();
+    this.getCyclonePredictionData();
+  }
+
+  toggleWeatherDetails() {
+    this.isWeatherDetailsExpanded = !this.isWeatherDetailsExpanded;
+  }
+
+  getWeatherDetails(){
+    this.weatherService.getWeatherByCord(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude).subscribe(res => {
+      this.weatherData = res.json();
+    }, err => { });
   }
 
   openWeatherNews() {
@@ -71,5 +88,41 @@ export class AlertPage implements OnInit {
       }
     });
   }
+
+  getCyclonePredictionData() {
+    this.weatherService.getRainfallData(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude).subscribe(ajaxResponse => {
+      var AVG_RAINFALL_LAST_10_DAY = this.getAverageData((ajaxResponse.json() as any).precip24Hour, 10);
+      var MARCH_TO_MAY_RAINFALL_AVG = this.getAverageData((ajaxResponse.json() as any).precip24Hour, (ajaxResponse.json() as any).precip24Hour.length - 1);
+      let AVERAGE_INCREASE_RAINFALL_MAY_TO_JUNE = this.getAverageIncreaseInRainfall((ajaxResponse.json() as any).precip24Hour);
+      this.weatherService.getFloodPercentage(AVG_RAINFALL_LAST_10_DAY, MARCH_TO_MAY_RAINFALL_AVG, AVERAGE_INCREASE_RAINFALL_MAY_TO_JUNE).subscribe(data => {
+        this.floodPredictionPercentage = parseFloat((data.json() as any).values[0][4]) < 0 ? 0 : parseFloat((data.json() as any).values[0][4]) * 100;
+    });
+  });
+}
+
+getAverageData(precipitationData, days) {
+  var averageData = 0;
+  for (var i = 0; i <= parseInt(days); i++) {
+    averageData = parseFloat(averageData.toString()) +
+      parseFloat(precipitationData[precipitationData.length - i - 1].toString());
+  }
+  return (averageData / parseInt(days));
+}
+
+getAverageIncreaseInRainfall(precipitationData) {
+  var averageData = 0;
+  let differenceSet: Array<number> = [];
+  for (var i = 0; i < precipitationData.length; i++) {
+    if (i < precipitationData.length - 1) {
+      differenceSet.push(precipitationData[i] - precipitationData[i + 1]);
+    }
+  }
+  for (var i = 0; i < differenceSet.length; i++) {
+    averageData = parseFloat(averageData.toString()) +
+      parseFloat(differenceSet[differenceSet.length - i - 1].toString());
+  }
+  return (averageData / parseInt(differenceSet.length.toString()));
+}
+
 }
 

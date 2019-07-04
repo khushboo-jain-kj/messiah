@@ -44,13 +44,8 @@ ion-card-content {
 }
 
 .disaster-action-items {
-    font-size: 50px;
-    >div {
-        position: absolute;
-        right: 20px;
-        bottom: 25px;
-        font-size: 50px;
-    }
+    font-size: 30px;
+    text-align: center;
 }
 
 .camera-icon {
@@ -58,4 +53,50 @@ ion-card-content {
     right: 20px;
     font-size: 30px;
     top: 13px;
+}
+
+.expand-collapse-icon {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    font-size: 25px;
+    color: #444444;
+}
+
+.flood-prediction-percentage {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 30px;
+}
+
+ion-card.weather {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    background: url('../../assets/images/weather.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white !important;
+    text-shadow: 1px 1px 1px black;
+}
+
+ion-card.weather ion-card-title,
+ion-card.weather ion-card-subtitle {
+    color: white !important;
+    text-shadow: 2px 2px 2px black;
+}
+
+ion-card.headlines,
+ion-card.news {
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    background-color: #a2a4ab;
+}
+
+.loader-image {
+    position: absolute;
+    top: 15px;
+    right: 15px;
 }

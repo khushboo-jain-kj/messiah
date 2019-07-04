@@ -42,6 +42,11 @@ export class AppComponent {
       title: 'Talk to us',
       url: '/chatbot',
       icon: 'chatboxes'
+    },
+      {
+      title: 'Community Forum',
+      url: '/community-forum',
+      icon: 'person'
     }
   ];
 

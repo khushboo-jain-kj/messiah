@@ -10,41 +10,178 @@
 </ion-header>
 
 <ion-content>
-
-    <ion-card *ngFor="let news of weatherNews">
-        <ion-card-header (click)="openNewsDetail(news)">
-            <ion-item>
-                <ion-card-title>{{news.eventDescription}}</ion-card-title><br>
-                <ion-icon name="arrow-down" slot="start" *ngIf="news.isOpen===1"></ion-icon>
-                <ion-icon name="arrow-forward" slot="start" *ngIf="news.isOpen===0"></ion-icon>
-                <p *ngIf="news.tone">{{news.tone}}</p>
-            </ion-item>
+    <ion-card *ngIf="weatherData" class="weather" (click)="toggleWeatherDetails()">
+        <ion-card-header>
+            <ion-card-title>{{weatherData.temperature}}&deg;C</ion-card-title>
+            <ion-card-subtitle>{{weatherData.cloudCoverPhrase}}</ion-card-subtitle>
+            <div class="expand-collapse-icon" style="color: #ffffff;">
+                <ion-icon name="remove" slot="start" *ngIf="isWeatherDetailsExpanded"></ion-icon>
+                <ion-icon name="add" slot="start" *ngIf="!isWeatherDetailsExpanded"></ion-icon>
+            </div>
         </ion-card-header>
-        <ion-card-content *ngIf="news.isOpen===1">
-            <p class="news-text">{{news.detail.description}}</p>
-            <p class="card-footer">Source - {{news.detail.source}}</p>
+        <ion-card-content *ngIf="isWeatherDetailsExpanded">
+            <ion-grid class="weather-data-details">
+                <ion-row>
+                    <ion-col>
+                        <div>Max. Temperature</div>
+                        <div>{{weatherData.temperatureMax24Hour}}<span>&deg;C</span></div>
+                    </ion-col>
+                    <ion-col>
+                        <div>Min. Temperature</div>
+                        <div>{{weatherData.temperatureMin24Hour}}<span>&deg;C</span></div>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row>
+                    <ion-col>
+                        <div>Sunrise</div>
+                        <div>
+                            {{weatherData.sunriseTimeLocal | date:'h:mm'}}<span>{{weatherData.sunriseTimeLocal | date:'a'}}</span>
+                        </div>
+                    </ion-col>
+                    <ion-col>
+                        <div>Sunset</div>
+                        <div>
+                            {{weatherData.sunsetTimeLocal | date:'h:mm'}}<span>{{weatherData.sunsetTimeLocal | date:'a'}}</span>
+                        </div>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row>
+                    <ion-col>
+                        <div>Chance of rain</div>
+                        <div>{{weatherData.sunriseTimeLocal | date:'h:mm'}}<span>{{weatherData.sunriseTimeLocal | date:'a'}}</span></div>
+                    </ion-col>
+                    <ion-col>
+                        <div>Humidity</div>
+                        <div>{{weatherData.relativeHumidity}}<span>%</span></div>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row>
+                    <ion-col>
+                        <div>Wind</div>
+                        <div><span>{{weatherData.windDirectionCardinal}}&nbsp;</span>{{weatherData.windSpeed}} km/hr</div>
+                    </ion-col>
+                    <ion-col>
+                        <div>Feels like</div>
+                        <div>{{weatherData.temperatureFeelsLike}}<span>&deg;C</span></div>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row>
+                    <ion-col>
+                        <div>Precipitation</div>
+                        <div>{{weatherData.precip1Hour}} <span>cm</span></div>
+                    </ion-col>
+                    <ion-col>
+                        <div>Pressure</div>
+                        <div>{{weatherData.pressureMeanSeaLevel}}<span>&nbsp;hPa</span></div>
+                    </ion-col>
+                </ion-row>
+
+                <ion-row>
+                    <ion-col>
+                        <div>Visibility</div>
+                        <div>{{weatherData.visibility}} <span>km</span></div>
+                    </ion-col>
+                    <ion-col>
+                        <div>UV Index</div>
+                        <div>{{weatherData.uvIndex}}</div>
+                    </ion-col>
+                </ion-row>
+                <ion-row>
+                    <ion-col>See weather map</ion-col>
+                </ion-row>
+            </ion-grid>
         </ion-card-content>
     </ion-card>
 
-    <ion-card>
+    <ion-card *ngIf="floodPredictionPercentage!==-1" [attr.color]="floodPredictionPercentage > 50 ? 'danger': 'success'">
         <ion-card-header>
-            <ion-item>
-                <ion-card-title>Flood Prediction</ion-card-title><br>
+            <ion-card-title>Flood Prediction</ion-card-title>
+            <ion-card-subtitle>Based on your location's rainfall data</ion-card-subtitle>
+            <div class="flood-prediction-percentage">{{floodPredictionPercentage}}%</div>
+        </ion-card-header>
+        <ion-card-content class="disaster-action-items" *ngIf="floodPredictionPercentage > 50">
+            <ion-grid>
+                <ion-row>
+                    <ion-col>
+                        <ion-icon name="navigate"></ion-icon>
+                    </ion-col>
+                    <ion-col>
+                        <ion-icon name="chatbubbles"></ion-icon>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-card-content>
+    </ion-card>
+    <ion-card *ngIf="floodPredictionPercentage===-1" color="light">
+        <ion-card-header>
+            <ion-card-title>Analyzing Flood Prediction</ion-card-title>
+            <ion-card-subtitle>Please wait! We are analyzing your location's rainfall data.</ion-card-subtitle>
+            <div class="loader-image">
+                <img [src]="loaderImage" style="width: 25px;" />
+            </div>
+        </ion-card-header>
+    </ion-card>
 
-            </ion-item>
+
+    <ion-card *ngIf="cycloneAlertPer!==-1" [attr.color]="cycloneAlertPer > 50 ? 'danger': 'success'">
+        <ion-card-header>
+            <ion-card-title>Cyclone Prediction</ion-card-title>
+            <ion-card-subtitle>Based on your location's satellite image analysis</ion-card-subtitle>
+            <div class="flood-prediction-percentage" *ngIf="cycloneAlertPer!==-1">{{cycloneAlertPer}}%</div>
+        </ion-card-header>
+        <ion-card-content class="disaster-action-items" *ngIf="cycloneAlertPer > 50">
+            <ion-grid>
+                <ion-row>
+                    <ion-col>
+                        <ion-icon name="navigate"></ion-icon>
+                    </ion-col>
+                    <ion-col>
+                        <ion-icon name="chatbubbles"></ion-icon>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </ion-card-content>
+    </ion-card>
+    <ion-card *ngIf="cycloneAlertPer===-1" color="light">
+        <ion-card-header>
+            <ion-card-title>Analyzing Cyclone Prediction</ion-card-title>
+            <ion-card-subtitle>Please wait! We are analyzing the satellite image of your location.</ion-card-subtitle>
+            <div class="loader-image">
+                <img [src]="loaderImage" style="width: 25px;" />
+            </div>
+        </ion-card-header>
+    </ion-card>
+
+    <ion-card class="headlines">
+        <ion-card-header>
+            <ion-card-title>Weather News Headlines</ion-card-title>
         </ion-card-header>
         <ion-card-content>
+            <div *ngFor="let news of weatherNews">
+                <ion-card class="news" [attr.color]="light" style="background-color: #ffffff;">
+                    <ion-card-header (click)="openNewsDetail(news)" style="padding:10px">
+                        <ion-card-title style="padding: 5px;padding-left: 25px;">{{news.eventDescription}}</ion-card-title>
+                        <ion-badge [attr.color]="news.tone==='fear'?'warning':'danger'" style="    transform: rotate(-90deg);position: absolute;left: -16px;top: 15px;padding: 5px 14px;">{{news.tone}}</ion-badge>
+                        <div class="expand-collapse-icon" style="top:10px">
+                            <ion-icon name="remove" slot="start" *ngIf="news.isOpen===1"></ion-icon>
+                            <ion-icon name="add" slot="start" *ngIf="news.isOpen===0"></ion-icon>
+                        </div>
+                        <!--<ion-item>
+                    <p *ngIf="news.tone">{{news.tone}}</p>
+                </ion-item>-->
+                    </ion-card-header>
+                    <ion-card-content *ngIf="news.isOpen===1">
+                        <p class="news-text">{{news.detail.description}}</p>
+                        <p class="card-footer">Source - {{news.detail.source}}</p>
+                    </ion-card-content>
+                </ion-card>
+            </div>
         </ion-card-content>
     </ion-card>
 
 
-    <ion-card *ngIf="cycloneAlertPer===0">
-        <ion-card-header>
-            <ion-item>
-                <ion-card-title>Cyclone Prediction</ion-card-title><br> false
-            </ion-item>
-        </ion-card-header>
-        <ion-card-content>
-        </ion-card-content>
-    </ion-card>
 </ion-content>

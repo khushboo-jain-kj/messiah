@@ -9,97 +9,25 @@
     </ion-toolbar>
 </ion-header>
 <i class="wi wi-day-sunny"></i>
-<ion-card *ngIf="weatherData" [attr.color]="weatherData.dayOrNight === 'D'? 'primary' : 'dark'" (click)="toggleWeatherDetails()">
-    <ion-card-header>
-        <ion-card-title>{{weatherData.temperature}}&deg;C</ion-card-title>
-        <ion-card-subtitle>{{weatherData.cloudCoverPhrase}}</ion-card-subtitle>
-        <ion-icon class="icon icon-svg icon-svg-light icon-foggy icon-21"></ion-icon>
-    </ion-card-header>
-    <ion-card-content *ngIf="isWeatherDetailsExpanded">
-        <ion-grid class="weather-data-details">
-            <ion-row>
-                <ion-col>
-                    <div>Max. Temperature</div>
-                    <div>{{weatherData.temperatureMax24Hour}}<span>&deg;C</span></div>
-                </ion-col>
-                <ion-col>
-                    <div>Min. Temperature</div>
-                    <div>{{weatherData.temperatureMin24Hour}}<span>&deg;C</span></div>
-                </ion-col>
-            </ion-row>
-
-            <ion-row>
-                <ion-col>
-                    <div>Sunrise</div>
-                    <div>
-                        {{weatherData.sunriseTimeLocal | date:'h:mm'}}<span>{{weatherData.sunriseTimeLocal | date:'a'}}</span>
-                    </div>
-                </ion-col>
-                <ion-col>
-                    <div>Sunset</div>
-                    <div>
-                        {{weatherData.sunsetTimeLocal | date:'h:mm'}}<span>{{weatherData.sunsetTimeLocal | date:'a'}}</span>
-                    </div>
-                </ion-col>
-            </ion-row>
-
-            <ion-row>
-                <ion-col>
-                    <div>Chance of rain</div>
-                    <div>{{weatherData.sunriseTimeLocal | date:'h:mm'}}<span>{{weatherData.sunriseTimeLocal | date:'a'}}</span></div>
-                </ion-col>
-                <ion-col>
-                    <div>Humidity</div>
-                    <div>{{weatherData.relativeHumidity}}<span>%</span></div>
-                </ion-col>
-            </ion-row>
-
-            <ion-row>
-                <ion-col>
-                    <div>Wind</div>
-                    <div><span>{{weatherData.windDirectionCardinal}}&nbsp;</span>{{weatherData.windSpeed}} km/hr</div>
-                </ion-col>
-                <ion-col>
-                    <div>Feels like</div>
-                    <div>{{weatherData.temperatureFeelsLike}}<span>&deg;C</span></div>
-                </ion-col>
-            </ion-row>
-
-            <ion-row>
-                <ion-col>
-                    <div>Precipitation</div>
-                    <div>{{weatherData.precip1Hour}} <span>cm</span></div>
-                </ion-col>
-                <ion-col>
-                    <div>Pressure</div>
-                    <div>{{weatherData.pressureMeanSeaLevel}}<span>&nbsp;hPa</span></div>
-                </ion-col>
-            </ion-row>
-
-            <ion-row>
-                <ion-col>
-                    <div>Visibility</div>
-                    <div>{{weatherData.visibility}} <span>km</span></div>
-                </ion-col>
-                <ion-col>
-                    <div>UV Index</div>
-                    <div>{{weatherData.uvIndex}}</div>
-                </ion-col>
-            </ion-row>
-        </ion-grid>
-    </ion-card-content>
-</ion-card>
 
 <ion-content>
     <ion-fab vertical="bottom" horizontal="end">
         <ion-fab-button>
-            <ion-icon name="apps"></ion-icon>
+            <ion-icon name="logo-buffer"></ion-icon>
         </ion-fab-button>
         <ion-fab-list side="top">
-            <ion-fab-button (click)="setOverlayMap('wind')">Wind</ion-fab-button>
-            <ion-fab-button (click)="setOverlayMap('temp')">Temperature</ion-fab-button>
-            <ion-fab-button (click)="setOverlayMap('clouds')">Cloud</ion-fab-button>
-            <ion-fab-button (click)="setOverlayMap('rain')">Rain</ion-fab-button>
+            <ion-fab-button (click)="setOverlayMap('wind')">
+                <ion-icon name="reorder"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button (click)="setOverlayMap('temp')">
+                <ion-icon name="thermometer"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button (click)="setOverlayMap('clouds')">
+                <ion-icon name="cloud"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-button (click)="setOverlayMap('rain')">
+                <ion-icon name="cloudy-night"></ion-icon>
+            </ion-fab-button>
         </ion-fab-list>
     </ion-fab>
     <ion-searchbar [(ngModel)]="autocomplete" (ionInput)="updateSearchResults($event)" placeholder="Search for a place">
