@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
 import { HttpHeaders } from '@angular/common/http';
+import { HTTP } from '@ionic-native/http/ngx';
 
 import { Observable } from 'rxjs';
 import { map, delay } from 'rxjs/operators';
@@ -14,7 +15,7 @@ export class WeatherService {
     public static chatSessionId: string;
     public static locationCoords: any = {};
 
-    constructor(private http: Http) { }
+    constructor(private http: Http, private httpNative: HTTP) { }
 
     getWeatherByCord(lat: string, lon: string): Observable<any> {
         return this.http.get('https://api.weather.com/v3/wx/observations/current?geocode=' + lat + ',' + lon + '&units=m&language=en-US&format=json&apiKey=320c9252a6e642f38c9252a6e682f3c6');
@@ -88,13 +89,7 @@ export class WeatherService {
     }
 
     getDisasterImageAnalysisData(image: string) {
-        const httpOptions = {
-            headers: new Headers({
-                'Content-Type': 'application/json',
-                'Authorization': 'Basic ' + btoa('apikey:tf1IDPHaG6dBxZX2TUijLvMJvMy--Q1L7raPSlwULvoO')
-            })
-        };
-        return this.http.get('https://gateway.watsonplatform.net/visual-recognition/api/v3/classify?version=2016-06-13&classifier_ids=DisasterImageModel_1262229537&url=https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Gita_2018-02-14_0150Z.jpg/260px-Gita_2018-02-14_0150Z.jpg', httpOptions).pipe(delay(3500));
+        return this.http.get('https://eu-gb.functions.cloud.ibm.com/api/v1/web/Khushboo.Jain%40cognizant.com_dev/default/GetSatlliteImageVisualRecognitionData.json?url=https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Gita_2018-02-14_0150Z.jpg/260px-Gita_2018-02-14_0150Z.jpg').pipe(delay(3500));
     }
 
     getRainfallData(lattitude: string, longitude: string) {
@@ -105,5 +100,13 @@ export class WeatherService {
         return this.http.get("https://eu-gb.functions.cloud.ibm.com/api/v1/web/Ankita.Ghosh%40cognizant.com_dev/default/GetFloodPredictionML.json?params.AVG_RAINFALL_LAST_10_DAY="
             + AVG_RAINFALL_LAST_10_DAY + "&MARCH_TO_MAY_RAINFALL_AVG=" + MARCH_TO_MAY_RAINFALL_AVG + "&AVERAGE_INCREASE_RAINFALL_MAY_TO_JUNE=" + AVERAGE_INCREASE_RAINFALL_MAY_TO_JUNE
         ).pipe(delay(3500));
+    }
+
+    checkNetworkConnectivity(): Observable<any> {
+        return this.http.get('https://eu-gb.functions.cloud.ibm.com/api/v1/web/Khushboo.Jain%40cognizant.com_dev/default/GetInternetConnectivity.json');
+    }
+
+    connectToMessiah(type: number): any {
+        return this.httpNative.get('http://192.168.4.1/LED_1/' + (type === 1 ? 'off' : 'on'), {}, {});
     }
 }

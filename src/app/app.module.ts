@@ -13,11 +13,14 @@ import { GoogleMaps } from '@ionic-native/google-maps';
 import { Network } from '@ionic-native/network/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 
+import { HTTP } from '@ionic-native/http/ngx';
+
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { WeatherService } from './services/weather.service';
 import { NetworkService } from './services/network.service';
+import { CommunityService } from './services/community.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,9 +40,11 @@ import { NetworkService } from './services/network.service';
     GoogleMaps,
     Network,
     Camera,
+    HTTP,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     WeatherService,
-    NetworkService
+    NetworkService,
+    CommunityService
   ],
   bootstrap: [AppComponent]
 })

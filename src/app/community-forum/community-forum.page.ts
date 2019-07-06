@@ -1,9 +1,22 @@
 import { Component, OnInit } from '@angular/core';
+import { CommunityService } from '../services/community.service';
+import { WeatherService } from '../services/weather.service';
+
 class Communitydata {
-  public text: string;
-  public time: string;
-  public image: string;
-  public type: string;
+  public userName: string = '';
+  public age: string = '';
+  public address: string = '';
+  public phoneNumber: string = '';
+  public markSafe: number = 0;
+  public imageUrl: string = '';
+  public uploadedByName: string = '';
+  public uploadedDate: string = '';
+  public uploadedByPhnNum: string = '';
+  public isMsgSent: number = 0;
+  public sendPhnNum: string = '';
+  public senderName: string = '';
+  public safeLocation: string = '';
+  public authToken: string = '';
 }
 @Component({
   selector: 'app-community-forum',
@@ -14,27 +27,28 @@ class Communitydata {
 export class CommunityForumPage implements OnInit {
   dataToAdd: Communitydata;
   listData: Array<Communitydata>;
-  constructor() {
+
+  constructor(public communityService: CommunityService, public weatherService: WeatherService) {
     this.dataToAdd = new Communitydata();
-    this.dataToAdd.image = null;
-    this.dataToAdd.text = '';
-    this.dataToAdd.time = null;
     this.listData = new Array<Communitydata>();
   }
 
   ngOnInit() {
-    let com=new Communitydata();
-    
-    this.listData.push({
-      text: "person named ankita ghosh is missing from technopolis. If found please contact at 1234567890",
-      time: "03/07/2019",
-      type: "0",
-      image: "null"
-    });
+    this.getAllData();
+  }
+
+
+  getAllData() {
+    this.dataToAdd.address='';
+    this.communityService.getCommunityDetails().subscribe(data => {
+      this.listData = data.json().body;
+    })
   }
 
   addToList() {
-
+    this.communityService.addData(this.dataToAdd.address).subscribe(data => {
+      this.getAllData();
+    })
   }
 
 }

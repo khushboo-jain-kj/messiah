@@ -1,10 +1,13 @@
-<ion-card color="danger" >
+<ion-card color="danger">
     <ion-card-header>
         <ion-card-title>No network detected</ion-card-title>
     </ion-card-header>
     <ion-card-content>
         <!-- <div class="airplane-logo"></div> -->
-      <p>Please Connect to MESSIAH wifi </p>
-      <p>Password: 12345678</p>
+        <p>Please Connect to MESSIAH wifi </p>
+        <p>Password: 12345678</p>
+        <div style="text-align: center">
+            <ion-button color="primary" shape="round" (click)="messiahConnect()">Help me</ion-button>
+        </div>
     </ion-card-content>
 </ion-card>

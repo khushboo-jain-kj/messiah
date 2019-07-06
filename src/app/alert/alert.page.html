@@ -10,6 +10,9 @@
 </ion-header>
 
 <ion-content>
+    <ion-fab vertical="bottom" horizontal="end">
+        <ion-fab-button (click)="$event.preventDefault();sendSms()" color="danger">SOS</ion-fab-button>
+    </ion-fab>
     <ion-card *ngIf="weatherData" class="weather" (click)="toggleWeatherDetails()">
         <ion-card-header>
             <ion-card-title>{{weatherData.temperature}}&deg;C</ion-card-title>

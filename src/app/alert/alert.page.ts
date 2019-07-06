@@ -5,6 +5,10 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { AlertController, NavController, ActionSheetController, LoadingController } from '@ionic/angular';
 import { Router } from '@angular/router';
 
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+
 @Component({
   selector: 'app-alert',
   templateUrl: './alert.page.html',
@@ -25,6 +29,8 @@ export class AlertPage implements OnInit {
     public actionSheetController: ActionSheetController,
     public loadingController: LoadingController,
     public camera: Camera,
+    public androidPermissions: AndroidPermissions, public locationAccuracy: LocationAccuracy,
+    public geolocation: Geolocation,
     public router: Router) {
     WeatherService.locationCoords.lattitude = 40.67;
     WeatherService.locationCoords.longitude = -83.65;
@@ -32,6 +38,7 @@ export class AlertPage implements OnInit {
   }
 
   ngOnInit() {
+    this.checkGPSPermission();
     this.openCyclonePredectionByimage();
     this.openWeatherNews();
     this.getWeatherDetails();
@@ -137,6 +144,92 @@ export class AlertPage implements OnInit {
       this.router.navigate(['/chatbot']);
     }
   }
+  //Check if application having GPS access permission  
+  checkGPSPermission() {
+    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
+      result => {
+        if (result.hasPermission) {
+          this.askToTurnOnGPS();
+        } else {
+          this.requestGPSPermission();
+        }
+      },
+      err => {
+        //    alert(err);
+      }
+    );
+  }
+
+  requestGPSPermission() {
+    this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+      if (canRequest) {
+        this.askToTurnOnGPS();
+      } else {
+        //Show 'GPS Permission Request' dialogue
+        this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
+          .then(
+          () => {
+            // call method to turn on GPS
+            this.askToTurnOnGPS();
+          },
+          error => {
+            //Show alert if user click on 'No Thanks'
+            //   alert('requestPermission Error requesting location permissions ' + error)
+          }
+          );
+      }
+    });
+  }
+
+  askToTurnOnGPS() {
+    this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
+      () => {
+        // When GPS Turned ON call method to get Accurate location coordinates
+        this.getLocationCoordinates()
+      },
+      //   error => alert('Error requesting location permissions ' + JSON.stringify(error))
+    );
+  }
+
+  getLocationCoordinates() {
+    this.geolocation.getCurrentPosition().then((resp) => {
+      WeatherService.locationCoords.lattitude = resp.coords.latitude;
+      WeatherService.locationCoords.longitude = resp.coords.longitude;
+      WeatherService.locationCoords.accuracy = resp.coords.accuracy;
+      WeatherService.locationCoords.timestamp = resp.timestamp;
+      WeatherService.locationCoords.lattitude = 40.67;
+      WeatherService.locationCoords.longitude = -83.65;
+    }).catch((error) => {
+      //  alert('Error getting location' + error);
+    });
+  }
+
+  sendSms() {
+    this.weatherService.getPlaceDetailsByGeoCode(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude).subscribe(resp => {
+      let data = resp.json();
+      let smsText: string = 'There is a SOS signal coming from '
+        + data.location.address[0]
+        + ' due to ' + 'Flood' + '. Please deploy the necessary teams on site.';
+      this.weatherService.sendSms(smsText, '919831981581').subscribe(resp => {
+        let data = resp.json();
+        if (data.status === "true") {
+          this.presentAlert('Alert',
+            'Emergency team notified',
+            'The emergency rescue and medical teams have been notified. Please wait till they reach and rescue you safely.');
+        }
+      });
+    });
+  }
+  async presentAlert(headerText: string, subtitle: string, message: string) {
+    const alert = await this.alertController.create({
+      header: headerText,
+      subHeader: subtitle,
+      message: message,
+      buttons: ['Ok']
+    });
+    await alert.present();
+  }
+
 
 }
 

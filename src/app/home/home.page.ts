@@ -62,85 +62,13 @@ export class HomePage {
     }
     this.windyMarkers = L.marker([lat, lng]).addTo(this.windyMap.map);
     this.windyMap.map.setView([lat, lng], 8);
-
-    // this.weatherService.getNewsByCord(lat, lng).subscribe(res => {
-    //   let data = res.json();
-    //   if (!data) return;
-    //   for (let i = 0; i < data.alerts.length; i++) {
-    //     this.newsData.push(
-    //       {
-    //         news: data.alerts[i].headlineText,
-    //         area: data.alerts[i].areaName,
-    //         key: data.alerts[i].detailKey
-    //       });
-    //   }
-    // }, err => { });
   }
 
   setOverlayMap(type: string) {
     this.windyMap.store.set('overlay', type);
   }
 
-  // //Check if application having GPS access permission  
-  // checkGPSPermission() {
-  //   this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
-  //     result => {
-  //       if (result.hasPermission) {
-  //         this.askToTurnOnGPS();
-  //       } else {
-  //         this.requestGPSPermission();
-  //       }
-  //     },
-  //     err => {
-  //       alert(err);
-  //     }
-  //   );
-  // }
-
-
-  // requestGPSPermission() {
-  //   this.locationAccuracy.canRequest().then((canRequest: boolean) => {
-  //     if (canRequest) {
-  //       this.askToTurnOnGPS();
-  //     } else {
-  //       //Show 'GPS Permission Request' dialogue
-  //       this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
-  //         .then(
-  //         () => {
-  //           // call method to turn on GPS
-  //           this.askToTurnOnGPS();
-  //         },
-  //         error => {
-  //           //Show alert if user click on 'No Thanks'
-  //           alert('requestPermission Error requesting location permissions ' + error)
-  //         }
-  //         );
-  //     }
-  //   });
-  // }
-
-  // askToTurnOnGPS() {
-  //   this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
-  //     () => {
-  //       // When GPS Turned ON call method to get Accurate location coordinates
-  //       this.getLocationCoordinates()
-  //     },
-  //     error => alert('Error requesting location permissions ' + JSON.stringify(error))
-  //   );
-  // }
-
-  // getLocationCoordinates() {
-  //   this.geolocation.getCurrentPosition().then((resp) => {
-  //     WeatherService.locationCoords.lattitude = resp.coords.latitude;
-  //     WeatherService.locationCoords.longitude = resp.coords.longitude;
-  //     WeatherService.locationCoords.accuracy = resp.coords.accuracy;
-  //     WeatherService.locationCoords.timestamp = resp.timestamp;
-  //     this.setWindyMap(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude);
-  //   }).catch((error) => {
-  //     alert('Error getting location' + error);
-  //   });
-  // }
-
+ 
   updateSearchResults(event) {
     setTimeout(() => {
       console.log(this.autocomplete);

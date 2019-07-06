@@ -68,7 +68,7 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleLightContent();
-      this.checkGPSPermission();
+
       this.splashScreen.hide();
       this.networkSubscriber();
 
@@ -79,6 +79,8 @@ export class AppComponent {
       new windyInit(windyMapOptions, windyAPI => {
         WeatherService.windyMap = windyAPI;
       });
+      // document.addEventListener("offline", function(){ alert('off'); }, false);
+      // document.addEventListener("online", function(){ alert('on');}, false);
     });
   }
 
@@ -95,68 +97,16 @@ export class AppComponent {
     if (!connected) {
       this.router.navigate(['/no-network']);
     } else {
+      this.weatherService.checkNetworkConnectivity().subscribe(resp => {
+        this.router.navigate(['/alert']);
+      },
+        (error) => {
+          this.router.navigate(['/no-network']);
+        });
       // this.router.navigate(['/alert']);
-      this._loc.back();
+
     }
   }
 
-  //Check if application having GPS access permission  
-  checkGPSPermission() {
-    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
-      result => {
-        if (result.hasPermission) {
-          this.askToTurnOnGPS();
-        } else {
-          this.requestGPSPermission();
-        }
-      },
-      err => {
-        //    alert(err);
-      }
-    );
-  }
 
-  requestGPSPermission() {
-    this.locationAccuracy.canRequest().then((canRequest: boolean) => {
-      if (canRequest) {
-        this.askToTurnOnGPS();
-      } else {
-        //Show 'GPS Permission Request' dialogue
-        this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
-          .then(
-            () => {
-              // call method to turn on GPS
-              this.askToTurnOnGPS();
-            },
-            error => {
-              //Show alert if user click on 'No Thanks'
-              //   alert('requestPermission Error requesting location permissions ' + error)
-            }
-          );
-      }
-    });
-  }
-
-  askToTurnOnGPS() {
-    this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
-      () => {
-        // When GPS Turned ON call method to get Accurate location coordinates
-        this.getLocationCoordinates()
-      },
-      //   error => alert('Error requesting location permissions ' + JSON.stringify(error))
-    );
-  }
-
-  getLocationCoordinates() {
-    this.geolocation.getCurrentPosition().then((resp) => {
-      WeatherService.locationCoords.lattitude = resp.coords.latitude;
-      WeatherService.locationCoords.longitude = resp.coords.longitude;
-      WeatherService.locationCoords.accuracy = resp.coords.accuracy;
-      WeatherService.locationCoords.timestamp = resp.timestamp;
-      WeatherService.locationCoords.lattitude = 40.67;
-      WeatherService.locationCoords.longitude = -83.65;
-    }).catch((error) => {
-      //  alert('Error getting location' + error);
-    });
-  }
 }
