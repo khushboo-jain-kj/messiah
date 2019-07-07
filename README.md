@@ -14,6 +14,8 @@ It is a mobile application that can be downloaded from Google Playstore once it 
 
 ## Current Problem
 
+Disasters are unavoidable circumstances. But lots of lives can be saved by creating awareness programmes and smart alerts. Also, loads of lives can be saved by deployment of proper help at correct times. However, the entire community has to work together to overcome a disaster and the damage caused by the disaster.
+
 ## Solution Description
 
 Project Messiah is an android application that provides many computational models and predictive models, which can work with the forecasting of the disasters. It also automates the disaster management, by efficiently deploying proper disaster teams based on the disaster incident language intent analysis. It also provides the user with an in-hand application to trigger the disaster SOS. 
@@ -52,3 +54,4 @@ For architecture diagram, please refer to this [deck](https://github.com/khushbo
   - Implementation of modelling of the safe houses and the realtime capacity of the safe house with the help of the clustered phone data.
   - Improvement of fully automated AI bot to deploy the disaster teams based on the user's input and validation of the score on the truthfulness of the news - a set intersection score between the area news headlines, satellite image and the disaster prediction score model. We can also ask for user's true situation validation.
   - Improvement in the NLP analysis to auto-classify the incident with `minimum` inputs from the user.
+  - Integration with the Facebook events to bring out the disaster management event programmes and share them to the disaster social workers.
