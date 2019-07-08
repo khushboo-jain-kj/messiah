@@ -29,12 +29,14 @@ Below is the list of IBM Cloud Resources we have used in `Project Messiah`
   - IBM Tone Analyzer
   - IBM NLP analysis
   - IBM DB2 database
-  - TWILIO messaging API
-  - .NET SDK for middleware
+  - IBM Cloud Foundry app (.NET Platform)
+  - IBM TWILIO messaging API
+  - .NET Core SDK for middleware
   - IOT Service
 
 ## Featured Technologies
   - Ionic framework
+  - Cordova framework
   - Android Platform Studio
   - HTML/SCSS/typeScript
 
