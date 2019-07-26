@@ -79,9 +79,12 @@ export class AppComponent {
       new windyInit(windyMapOptions, windyAPI => {
         WeatherService.windyMap = windyAPI;
       });
+
       // document.addEventListener("offline", function(){ alert('off'); }, false);
       // document.addEventListener("online", function(){ alert('on');}, false);
     });
+    WeatherService.locationCoords.lattitude = 40.67;
+    WeatherService.locationCoords.longitude = -95.85;
   }
 
   networkSubscriber(): void {
@@ -94,6 +97,7 @@ export class AppComponent {
       });
   }
   handleNotConnected(connected) {
+
     if (!connected) {
       this.router.navigate(['/no-network']);
     } else {

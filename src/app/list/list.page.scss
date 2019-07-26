@@ -1,3 +1,15 @@
-div {
-    color: red
+.legend {
+    >ion-col {
+        >div {
+            position: absolute;
+            top: 11px;
+            right: 40px;
+            font-size: 10px;
+        }
+        &:last-child {
+            >div {
+                right: 4px;
+            }
+        }
+    }
 }

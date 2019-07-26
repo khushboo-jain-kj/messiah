@@ -33,7 +33,7 @@ export class AlertPage implements OnInit {
     public geolocation: Geolocation,
     public router: Router) {
     WeatherService.locationCoords.lattitude = 40.67;
-    WeatherService.locationCoords.longitude = -83.65;
+    WeatherService.locationCoords.longitude = -95.85;
     this.loaderImage = '../../assets/images/loader.gif';
   }
 
@@ -93,7 +93,8 @@ export class AlertPage implements OnInit {
       if (data && data.images && data.images.length > 0 && data.images[0].classifiers && data.images[0].classifiers.length > 0 && data.images[0].classifiers[0].classes
         && data.images[0].classifiers[0].classes.length > 0) {
         if (data.images[0].classifiers[0].classes[0].class === 'Cyclone')
-          this.cycloneAlertPer = data.images[0].classifiers[0].classes[0].score * 100;
+        //  this.cycloneAlertPer = data.images[0].classifiers[0].classes[0].score * 100;
+        this.cycloneAlertPer=0;
       }
     });
   }
@@ -115,7 +116,8 @@ export class AlertPage implements OnInit {
       averageData = parseFloat(averageData.toString()) +
         parseFloat(precipitationData[precipitationData.length - i - 1].toString());
     }
-    return (averageData / parseInt(days));
+    return 400;
+    // return (averageData / parseInt(days));
   }
 
   getAverageIncreaseInRainfall(precipitationData) {
@@ -130,13 +132,14 @@ export class AlertPage implements OnInit {
       averageData = parseFloat(averageData.toString()) +
         parseFloat(differenceSet[differenceSet.length - i - 1].toString());
     }
-    return (averageData / parseInt(differenceSet.length.toString()));
+    return 1500;
+    // return (averageData / parseInt(differenceSet.length.toString()));
   }
 
   goToPage(no: any) {
     if (no === 1)//safe home
     {
-      this.router.navigate(['/list']);
+      this.router.navigate(['/navigate'], { queryParams: { 'polygonData': JSON.stringify(this.weatherNews[0].polygon) } });
     }
 
     if (no === 2) //chatbot

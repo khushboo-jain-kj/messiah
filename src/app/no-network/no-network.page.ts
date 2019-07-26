@@ -12,25 +12,27 @@ import { AlertController } from '@ionic/angular';
 })
 export class NoNetworkPage implements OnInit {
 
+  problem: string;
   constructor(public weatherService: WeatherService, public alertController: AlertController) { }
 
   ngOnInit() {
   }
 
   messiahConnect() {
-    setTimeout(() => {
-     
-      this.presentAlert('Alert',
-        'Your location has been sent to the server.Please wait for further reinforcement! ');
-    }, 5000);
-}
-
-async presentAlert(headerText: string,  message: string) {
-  const alert = await this.alertController.create({
-    header: headerText,
-    message: message,
-    buttons: ['Ok']
+    this.weatherService.connectToMessiah(this.problem).subscribe(resp => {
+        this.presentAlert('Alert',
+          'Your message with your present location has been sent to the server.Please wait for further reinforcement! ');
+this.problem='';  
   });
-  await alert.present();
-}
+    
+  }
+
+  async presentAlert(headerText: string, message: string) {
+    const alert = await this.alertController.create({
+      header: headerText,
+      message: message,
+      buttons: ['Ok']
+    });
+    await alert.present();
+  }
 }

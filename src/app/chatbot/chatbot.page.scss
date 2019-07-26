@@ -1,5 +1,4 @@
 @import '../../styles/mixins.scss';
-
 .no-message-container {
     >div {
         color: #999999;
@@ -22,10 +21,6 @@
     background-color: #007AFF;
     color: #ffffff;
     border-radius: 50%;
-}
-
-ion-menu-button {
-    color: #3a3a3c;
 }
 
 .comment-box {

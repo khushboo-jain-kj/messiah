@@ -8,6 +8,18 @@
 @import "../assets/fonts/Helvetica/helvetica-font";
 @import "../assets/fonts/ProximaNova/proxima_nova-font";
 @import "../styles/mixins.scss";
+*,
+ion-label,
+span,
+p,
+ion-content,
+ion-title,
+ion-card-content,
+div,
+ion-card-subtitle {
+    font-family: "Helvetica 55 Roman" !important;
+}
+
 h1,
 h2,
 h3,
@@ -15,15 +27,7 @@ h4,
 h5,
 h6,
 ion-card-title {
-    font-family: "Proxima Nova Semibold";
-}
-
-span,
-p,
-ion-content,
-ion-title,
-div {
-    font-family: "Helvetica 55 Roman";
+    font-family: "Proxima Nova Semibold" !important;
 }
 
 .user-icon {

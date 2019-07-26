@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar color="tertiary">
         <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
@@ -8,19 +8,54 @@
         </ion-title>
     </ion-toolbar>
 </ion-header>
-<ion-content>
+<ion-content fullscreen>
     <ion-list>
         <ion-list-header>
-            Recent Discussion
+            <ion-grid class="list-filter">
+                <ion-row>
+                    <ion-col *ngFor="let element of communityDataType">
+                        <ion-checkbox [(ngModel)]="element.selected" [checked]="element.selected" (ionChange)="checkBoxChanged($event)"> </ion-checkbox>
+                        <ion-label>{{element.type}}</ion-label>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
         </ion-list-header>
-        <ng-container *ngIf="listData && listData.length>0">
-            <ion-card *ngFor="let data of listData">
+        <div *ngIf="nlpQualifiedList && nlpQualifiedList.length>0">
+            <ion-card *ngFor="let data of nlpQualifiedList">
+                <img *ngIf="data.imageUrl && data.communityDataType ==='Missing'" src="{{data.imageUrl}}" />
+                <span *ngIf="data.communityDataType ==='Missing'" class="missing-banner">MISSING</span>
+                <span *ngIf="data.communityDataType !=='Missing'" class="missing-banner">{{data.reportedDataTone}}</span>
+                <!--<span *ngIf="data.communityDataType ==='General'" class="help-icon"><ion-icon name="heart-half"></ion-icon></span>-->
+                <ion-card-header>
+                    <ion-card-subtitle [attr.color]="data.communityDataType ==='Missing' ? 'danger': 'primary'">
+                        <span *ngIf="data.communityDataType ==='Missing'">{{data.communityDataType}}, Last known location - 
+                        <span *ngIf="data.address">{{data.address}}</span>
+                        <span *ngIf="!data.address">Unknown</span>
+                        </span>
+                        <span *ngIf="data.communityDataType !=='Missing' && data.address">Near 
+                        <span *ngIf="data.address">{{data.address}}</span>
+                        <span *ngIf="!data.address">{{deviceLocationCoord.lattitude}},{{deviceLocationCoord.longitude}}</span>
+                        </span>
+
+                    </ion-card-subtitle>
+                    <ion-card-title>
+                        <span *ngIf="data.communityDataType ==='Missing'">{{data.userName}} <span *ngIf="data.age">({{data.age}})</span></span>
+                        <span *ngIf="data.communityDataType ==='General'">{{data.communityDataType}}</span>
+                    </ion-card-title>
+                </ion-card-header>
                 <ion-card-content>
-                    {{data.address}}
-                    <div style="text-align: right">{{data.uploadedDate}}</div>
+                    <p>{{data.reportDataString}}</p>
                 </ion-card-content>
             </ion-card>
-        </ng-container>
+        </div>
+        <div *ngIf="!nlpQualifiedList || nlpQualifiedList.length ===0">
+            <ion-card class="no-data-found">
+                <ion-card-content>
+                    <ion-icon name="hand"></ion-icon>
+                    <p>No data found</p>
+                </ion-card-content>
+            </ion-card>
+        </div>
     </ion-list>
 
 </ion-content>

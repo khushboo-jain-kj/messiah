@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar color="tertiary">
         <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
@@ -14,6 +14,12 @@
         <div>
             <ion-icon name="chatboxes"></ion-icon>
             <p>Please type a message...</p>
+            <div>
+                <p>You can type like:</p>
+                <p>Save me</p>
+                <p>Help me</p>
+                <p>What is a cyclone?</p>
+            </div>
         </div>
     </ion-content>
     <ion-content *ngIf="chatMessages.length > 0">

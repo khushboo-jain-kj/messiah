@@ -21,9 +21,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { WeatherService } from './services/weather.service';
 import { NetworkService } from './services/network.service';
 import { CommunityService } from './services/community.service';
+import {NavigateToSafeHomePage} from './alert/navigateToSafeHome/navigateToSafeHome';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent,NavigateToSafeHomePage],
   entryComponents: [],
   imports: [
     BrowserModule,

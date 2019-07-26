@@ -34,12 +34,14 @@ ion-card-content {
         font-size: 10px;
         float: right;
         margin-top: 15px;
+        color: rgb(115, 115, 115);
     }
     .news-text {
         margin-bottom: 15px;
         margin-top: 5px;
         font-size: 12px;
         text-align: justify;
+        color: rgb(115, 115, 115);
     }
 }
 
@@ -58,9 +60,9 @@ ion-card-content {
 .expand-collapse-icon {
     position: absolute;
     right: 15px;
-    top: 15px;
+    top: 40px;
     font-size: 25px;
-    color: #444444;
+    color: #222222;
 }
 
 .flood-prediction-percentage {
@@ -70,33 +72,58 @@ ion-card-content {
     font-size: 30px;
 }
 
+ion-card {
+    // margin-left: 0;
+    // margin-right: 0;
+    // margin-top: 0;
+    color: white !important;
+}
+
 ion-card.weather {
-    margin-left: 0;
-    margin-right: 0;
-    margin-top: 0;
     background: url('../../assets/images/weather.jpg');
     background-repeat: no-repeat;
     background-size: cover;
-    color: white !important;
-    text-shadow: 1px 1px 1px black;
 }
 
 ion-card.weather ion-card-title,
 ion-card.weather ion-card-subtitle {
     color: white !important;
-    text-shadow: 2px 2px 2px black;
 }
 
-ion-card.headlines,
-ion-card.news {
-    margin-left: 0;
-    margin-right: 0;
-    margin-top: 0;
-    background-color: #a2a4ab;
-}
-
+// ion-card.headlines,
+// ion-card.news {
+//     margin-left: 0;
+//     margin-right: 0;
+//     margin-top: 0;
+//     background-color: #a2a4ab;
+// }
 .loader-image {
     position: absolute;
     top: 15px;
     right: 15px;
+}
+
+ion-card-title.temperature {
+    font-size: 25px;
+}
+
+ion-grid.weather-data-details {
+    >ion-row {
+        >ion-col {
+            >div {
+                &:last-child {
+                    font-size: 18px;
+                }
+            }
+        }
+    }
+}
+
+.tone-banner {
+    color: #ffffff;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 11px;
+    border-bottom-left-radius: 20px;
 }

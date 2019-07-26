@@ -1,13 +1,40 @@
-<ion-card color="danger">
-    <ion-card-header>
-        <ion-card-title>No network detected</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-        <!-- <div class="airplane-logo"></div> -->
-        <p>Please Connect to MESSIAH wifi </p>
-        <p>Password: 12345678</p>
-        <div style="text-align: center">
-            <ion-button color="primary" shape="round" (click)="messiahConnect()">Help me</ion-button>
-        </div>
-    </ion-card-content>
-</ion-card>
+<ion-header>
+    <ion-toolbar color="danger">
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-title>
+            Offline
+        </ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content>
+    <ion-card color="danger">
+        <ion-card-header>
+            <ion-card-title>No Network</ion-card-title>
+            <ion-card-subtitle>Network unavailable</ion-card-subtitle>
+            <ion-icon class="airplane-logo" name="airplane"></ion-icon>
+        </ion-card-header>
+        <ion-card-content>
+            <div>
+                <h4>Please follow instructions</h4>
+                <p>1. Connect to wifi - MESSIAH</p>
+                <p>2. Password - <strong>12345678</strong></p>
+            </div>
+        </ion-card-content>
+    </ion-card>
+    <ion-card>
+        <ion-card-header>
+            <ion-card-title>Don't panic</ion-card-title>
+            <ion-card-subtitle>messiah is here to help</ion-card-subtitle>
+        </ion-card-header>
+        <ion-card-content>
+            <ion-item>
+                <ion-textarea [(ngModel)]="problem" placeholder="Tell us your problem..."></ion-textarea>
+            </ion-item>
+            <div style="text-align: center; padding-top: 20px;">
+                <ion-button color="dark" (click)="messiahConnect()">Help</ion-button>
+            </div>
+        </ion-card-content>
+    </ion-card>
+</ion-content>

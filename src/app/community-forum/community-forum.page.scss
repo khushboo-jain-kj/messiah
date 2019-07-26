@@ -1,3 +1,41 @@
-div {
-    color: red
+@import '../../theme/variables.scss';
+.list-filter {
+    >ion-row {
+        >ion-col {
+            >ion-checkbox {
+                top: 4px;
+                margin-right: 5px;
+            }
+            >ion-label {
+                color: --ion-color-dark;
+            }
+        }
+    }
+}
+
+.missing-banner {
+    background-color: #FF453A;
+    color: #ffffff;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 11px;
+    border-bottom-left-radius: 20px;
+}
+
+.help-icon {
+    position: absolute;
+    right: 0;
+    padding: 10px;
+    font-size: 50px;
+    color: #FF453A;
+}
+
+.no-data-found {
+    text-align: center;
+    >ion-card-content {
+        >ion-icon {
+            font-size: 100px;
+        }
+    }
 }

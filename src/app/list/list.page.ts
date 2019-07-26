@@ -1,4 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 import { GoogleMaps, GoogleMap, CameraPosition, LatLng, GoogleMapsEvent, Marker, MarkerOptions } from '@ionic-native/google-maps';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
@@ -6,6 +7,8 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { WeatherService } from '../services/weather.service';
 
 declare var google: any;
+declare var Math: any;
+declare var Object: any;
 
 @Component({
   selector: 'app-list',
@@ -21,8 +24,10 @@ export class ListPage implements OnInit {
   isKM: any = 5000;
   latLng: any;
   nearbyMapBool = true;
-
-  constructor(public _googleMaps: GoogleMaps, public _geoloc: Geolocation) {
+  allSafeHomes: any = [];
+  nearestCount: any = 0;
+  routedFromHomePage: any;
+  constructor(public route: ActivatedRoute, public _googleMaps: GoogleMaps, public _geoloc: Geolocation) {
 
   }
 
@@ -33,12 +38,11 @@ export class ListPage implements OnInit {
 
     if (WeatherService.locationCoords.lattitude && WeatherService.locationCoords.longitude) {
       loc = new LatLng(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude);
-      this.getNearbyPlace(loc);
+      this.getNearbyPlace(loc)
       this.moveCamera(loc);
       this.createMarker(loc, 'You are here').then((marker: Marker) => {
         marker.showInfoWindow();
       }).catch(err => {
-        console.log(err);
       });
     } else {
       this.getLocation().then(res => {
@@ -48,16 +52,15 @@ export class ListPage implements OnInit {
         this.createMarker(loc, 'You are here').then((marker: Marker) => {
           marker.showInfoWindow();
         }).catch(err => {
-          console.log(err);
         });
       }).catch(err => {
-        console.log(err);
       });
     }
 
   }
 
   initMap() {
+
     this.map = GoogleMaps.create('map', {
       camera: {
         target: new LatLng(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude),
@@ -87,16 +90,18 @@ export class ListPage implements OnInit {
   getNearbyPlace(loc: LatLng) {
     //loc.lat = 22.57;
     //loc.lng = 88.43;
+
     let nearby = new google.maps.Map(this.nearbyMapElement.nativeElement, this.mapOptions);
     let service = new google.maps.places.PlacesService(nearby);
+
     service.nearbySearch({
       location: loc,
       radius: this.isKM,
       types: ['hospital']
     }, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        results=results.slice(0,8);
-        console.log(results);
+        results = results.slice(0, 8);
+        this.allSafeHomes = Object.assign(this.allSafeHomes, results);
         for (var i = 0; i < results.length; i++) {
           var place = results[i];
           let photo = place.icon;
@@ -120,8 +125,8 @@ export class ListPage implements OnInit {
       types: ['school']
     }, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        results=results.slice(0,8);
-        console.log(results);
+        results = results.slice(0, 8);
+        this.allSafeHomes = Object.assign(this.allSafeHomes, results);
         for (var i = 0; i < results.length; i++) {
           var place = results[i];
           let photo = place.icon;
@@ -145,8 +150,8 @@ export class ListPage implements OnInit {
       radius: this.isKM,
       types: ['supermarket']
     }, (results, status) => {
-      results=results.slice(0,8);
-      console.log(results);
+      results = results.slice(0, 8);
+      this.allSafeHomes = Object.assign(this.allSafeHomes, results);
       if (status === google.maps.places.PlacesServiceStatus.OK) {
         for (var i = 0; i < results.length; i++) {
           var place = results[i];
@@ -164,6 +169,9 @@ export class ListPage implements OnInit {
           this.map.addMarker(markerOptions);
         }
       }
+
     });
+
   }
+
 }

@@ -3,5 +3,14 @@ p {
 }
 
 .airplane-logo {
-    background-image: url("./_ionicons_svg_ios-airplane.svg");
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    font-size: 50px;
+}
+
+ion-content {
+    p {
+        text-align: left;
+    }
 }

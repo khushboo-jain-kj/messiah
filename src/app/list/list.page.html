@@ -1,5 +1,5 @@
 <ion-header>
-    <ion-toolbar>
+    <ion-toolbar color="tertiary">
         <ion-buttons slot="start">
             <ion-menu-button></ion-menu-button>
         </ion-buttons>
@@ -11,18 +11,21 @@
 
 <ion-content>
     <ion-grid>
-        <ion-row>
+        <ion-row class="legend">
             <ion-col>
-                <img src="assets/school.png" width="25px" /><span>School</span>
+                <img src="assets/school.png" width="25px" />
+                <div class="map-legend">School</div>
             </ion-col>
             <ion-col>
-                <img src="assets/hospital.png" width="25px" /><span>Hospital</span>
+                <img src="assets/hospital.png" width="25px" />
+                <div class="map-legend">Hospital</div>
             </ion-col>
             <ion-col>
-                <img src="assets/grocery.png" width="25px" /><span>Supermarket</span>
+                <img src="assets/grocery.png" width="25px" />
+                <div class="map-legend">Supermarket</div>
             </ion-col>
         </ion-row>
     </ion-grid>
-    <div #map id="map" style="height:80%"></div>
+    <div #map id="map" style="height: calc(100% - 48px);"></div>
     <div #nearbyMap id="nearbyMap" [hidden]="nearbyMapBool"></div>
 </ion-content>

@@ -71,7 +71,6 @@ export class HomePage {
  
   updateSearchResults(event) {
     setTimeout(() => {
-      console.log(this.autocomplete);
       if (this.autocomplete == '') {
         this.autocompleteItems = [];
         return;
@@ -104,7 +103,6 @@ export class HomePage {
 
   openHeadline(news) {
     this.weatherService.getNewsDetails(news.key).subscribe(res => {
-      console.log(res.json());
     }, err => { });
   }
 }
