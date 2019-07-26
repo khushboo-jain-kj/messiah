@@ -1,0 +1,289 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <style>
+        /* Always set the map height explicitly to define the size of the div
+        * element that contains the map. */
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        /* Optional: Makes the sample page fill the window. */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family:Tahoma;
+        }
+        .sidemenu{
+            margin: 5px;
+            box-shadow: black 1px 1px 1px 1px;
+            padding: 5px;
+            font-size: 11px;
+        }
+    </style>
+    <script>
+        var style = [
+            { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
+            { elementType: 'labels.text.stroke', stylers: [{ color: '#242f3e' }] },
+            { elementType: 'labels.text.fill', stylers: [{ color: '#746855' }] },
+            {
+                featureType: 'administrative.locality',
+                elementType: 'labels.text.fill',
+                stylers: [{ color: '#d59563' }]
+            },
+            {
+                featureType: 'poi',
+                elementType: 'labels.text.fill',
+                stylers: [{ color: '#d59563' }]
+            },
+            {
+                featureType: 'poi.park',
+                elementType: 'geometry',
+                stylers: [{ color: '#263c3f' }]
+            },
+            {
+                featureType: 'poi.park',
+                elementType: 'labels.text.fill',
+                stylers: [{ color: '#6b9a76' }]
+            },
+            {
+                featureType: 'road',
+                elementType: 'geometry',
+                stylers: [{ color: '#38414e' }]
+            },
+            {
+                featureType: 'road',
+                elementType: 'geometry.stroke',
+                stylers: [{ color: '#212a37' }]
+            },
+            {
+                featureType: 'road',
+                elementType: 'labels.text.fill',
+                stylers: [{ color: '#9ca5b3' }]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'geometry',
+                stylers: [{ color: '#746855' }]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'geometry.stroke',
+                stylers: [{ color: '#1f2835' }]
+            },
+            {
+                featureType: 'road.highway',
+                elementType: 'labels.text.fill',
+                stylers: [{ color: '#f3d19c' }]
+            },
+            {
+                featureType: 'transit',
+                elementType: 'geometry',
+                stylers: [{ color: '#2f3948' }]
+            },
+            {
+                featureType: 'transit.station',
+                elementType: 'labels.text.fill',
+                stylers: [{ color: '#d59563' }]
+            },
+            {
+                featureType: 'water',
+                elementType: 'geometry',
+                stylers: [{ color: '#17263c' }]
+            },
+            {
+                featureType: 'water',
+                elementType: 'labels.text.fill',
+                stylers: [{ color: '#515c6d' }]
+            },
+            {
+                featureType: 'water',
+                elementType: 'labels.text.stroke',
+                stylers: [{ color: '#17263c' }]
+            }
+        ]
+        function initialize() {
+            setInterval(function () {
+                getData(function (data) {
+                    var d = [];
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].age === '0') {
+                            d.push({
+                                content: atob(data[i].address.split('|')[0]),
+                                lat: data[i].address.split('|')[1].split(',')[0],
+                                lon: data[i].address.split('|')[1].split(',')[1],
+                                id: data[i].address.split('|')[2]
+                            });
+                        }
+                    }
+                    initMap(d);
+                });
+            }, 5000);
+        }
+
+        function getData(callback) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    callback(JSON.parse(this.responseText).body);
+                }
+            };
+            xhttp.open("GET", "https://eu-gb.functions.cloud.ibm.com/api/v1/web/Khushboo.Jain%40cognizant.com_dev/default/GetIncidentData.json", true);
+            xhttp.send();
+        }
+
+        var myLocation;
+        var infowindow;
+        var map;
+        var markers = [];
+        var directionsService;
+        var directionsDisplay;
+
+        function initMap(data) {
+            if (!map) {
+                myLocation = new google.maps.LatLng(22.6924, 88.4653);
+                directionsService = new google.maps.DirectionsService();
+                directionsDisplay = new google.maps.DirectionsRenderer({ suppressMarkers: true });
+
+                map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 11,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP,
+                    center: myLocation
+                });
+                directionsDisplay.setMap(map);
+
+                new google.maps.Marker({
+                    position: myLocation,
+                    icon: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/32/Map-Marker-Marker-Outside-Pink-icon.png',
+                    map: map
+                });
+            }
+
+            for (var i = 0; i < data.length; i++) {
+                var flag = 0;
+                for (var j = 0; j < markers.length; j++) {
+                    if (data[i].id === markers[j].id) {
+                        flag = 1;
+                    }
+                }
+
+                if (flag === 0) {
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(parseFloat(data[i].lat), parseFloat(data[i].lon)),
+                        icon: 'http://icons.iconarchive.com/icons/visualpharm/must-have/32/User-icon.png',
+                        map: map
+                    });
+                    marker.content = data[i];
+
+                    markers.push({
+                        id: data[i].id,
+                        marker: marker
+                    })
+
+                    marker.addListener('click', function () {
+                        var children = document.getElementById('content').children;
+                        for (var i = 0; i < children.length; i++) {
+                            if (this.content.id === children[i].getAttribute("id")) {
+                                children[i].style.backgroundColor = '#cad9ed';
+                            }
+                            else {
+                                children[i].style.backgroundColor = 'White';
+                            }
+                        }
+                        clickMarker(this);
+                    })
+
+                    getAddress(marker, function (data) {
+                        if (document.getElementById('add' + data.content.id)) {
+                            document.getElementById('add' + data.content.id).innerHTML = data.address;
+                        }
+                    });
+                }
+            }
+            renderSideMenu();
+        }
+
+        function clickMarker(marker) {
+            if (infowindow) {
+                infowindow.close();
+            }
+            infowindow = new google.maps.InfoWindow();
+            infowindow.setContent("<div style='font-family:Tahoma;font-size:20px;'><b>" + marker.content.content + "</b></div><div><b>Address: </b>" + marker.address + "</div><div><b>Coordinates: </b>" + marker.content.lat + "," + marker.content.lon + "</div><div style='font-size:10px;padding-top:5px;'><i>" + marker.content.id + "</i></div>");
+            infowindow.open(map, marker);
+
+            directionsService.route({
+                origin: marker.position,
+                destination: myLocation,
+                travelMode: 'DRIVING'
+            }, function (response, status) {
+                if (status === 'OK') {
+                    directionsDisplay.setDirections(response);
+                } else {
+                    window.alert('Directions request failed due to ' + status);
+                }
+            });
+        }
+
+        function getAddress(marker, callback) {
+            new google.maps.Geocoder().geocode({
+                latLng: marker.position
+            }, function (responses) {
+                if (responses && responses.length > 0) {
+                    marker.address = responses[0].formatted_address;
+                } else {
+                    marker.address = 'Cannot determine address at this location.';
+                }
+                callback(marker);
+            })
+        }
+
+        function renderSideMenu() {
+            var children = document.getElementById('content').children;
+            for (var i = 0; i < markers.length; i++) {
+                var flag = 0;
+                for (var j = 0; j < children.length; j++) {
+                    if (markers[i].id === children[j].getAttribute("id")) {
+                        flag = 1;
+                    }
+                }
+
+                if (flag === 0) {
+                    var div = document.createElement('div');
+                    div.className = "sidemenu";
+                    div.setAttribute("id", markers[i].id);
+                    div.innerHTML = "<div style='font-family:Tahoma;font-size:15px;'><b>" + markers[i].marker.content.content + "</b></div><div><b>Address: </b><span id='add" + markers[i].id + "'>" + markers[i].marker.address + "</span></div><div><b>Coordinates: </b>" + markers[i].marker.content.lat + "," + markers[i].marker.content.lon + "</div><div style='font-size:10px;padding-top:5px;'><i>" + markers[i].marker.content.id + "</i></div>";
+                    div.addEventListener('click', function () {
+                        for (var i = 0; i < markers.length; i++) {
+                            if (markers[i].id === this.getAttribute('id')) {
+                                clickMarker(markers[i].marker);
+                                break;
+                            }
+                        }
+                        var children = document.getElementById('content').children;
+                        for (var i = 0; i < children.length; i++) {
+                            children[i].style.backgroundColor = 'White';
+                        }
+                        this.style.backgroundColor = '#cad9ed';
+                    });
+                    document.getElementById('content').appendChild(div);
+                }
+            }
+        }
+    </script>
+</head>
+<body>
+    <div style="display:table; height:100%;">
+        <div id="content" style="width:300px;"></div>
+        <div id="map" style="display:table-cell;width:100%;"></div>
+    </div>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAn1i1EY4UEM70S4ufFT19uho6wu9axckg"></script>
+    <script>
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+    
+</body>
+</html>
