@@ -22,6 +22,6 @@ export class CommunityService {
     }
 
     addData(dataToAdd: any): Observable<any> {
-        return this.http.get('https://eu-gb.functions.cloud.ibm.com/api/v1/web/Khushboo.Jain%40cognizant.com_dev/default/InsertIncidentData.json?address=' + dataToAdd);
+        return this.http.get('https://eu-gb.functions.cloud.ibm.com/api/v1/web/Khushboo.Jain%40cognizant.com_dev/default/InsertIncidentData.json?ms=1&address=' + dataToAdd);
     }
 }
