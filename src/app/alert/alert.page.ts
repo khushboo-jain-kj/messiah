@@ -25,24 +25,94 @@ export class AlertPage implements OnInit {
   constructor(
     public weatherService: WeatherService,
     public alertController: AlertController,
+    public androidPermissions: AndroidPermissions, public locationAccuracy: LocationAccuracy,
+    public geolocation: Geolocation,
     public navCtrl: NavController,
     public actionSheetController: ActionSheetController,
     public loadingController: LoadingController,
     public camera: Camera,
-    public androidPermissions: AndroidPermissions, public locationAccuracy: LocationAccuracy,
-    public geolocation: Geolocation,
     public router: Router) {
-    WeatherService.locationCoords.lattitude = 40.67;
-    WeatherService.locationCoords.longitude = -95.85;
+    // WeatherService.locationCoords.lattitude = 40.67;
+    // WeatherService.locationCoords.longitude = -95.85;
     this.loaderImage = '../../assets/images/loader.gif';
   }
 
   ngOnInit() {
-    this.checkGPSPermission();
-    this.openCyclonePredectionByimage();
-    this.openWeatherNews();
-    this.getWeatherDetails();
-    this.getCyclonePredictionData();
+    if (!WeatherService.locationCoords.lattitude && !WeatherService.locationCoords.longitude) {
+      this.checkGPSPermission().then(res => {
+        this.openCyclonePredectionByimage();
+        this.openWeatherNews();
+        this.getWeatherDetails();
+        this.getCyclonePredictionData();
+      },
+        err => { });
+    } else {
+      this.openCyclonePredectionByimage();
+      this.openWeatherNews();
+      this.getWeatherDetails();
+      this.getCyclonePredictionData();
+    }
+
+  }
+
+  checkGPSPermission() {
+    return this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
+      result => {
+        if (result.hasPermission) {
+          return this.askToTurnOnGPS();
+        } else {
+          return this.requestGPSPermission();
+        }
+      },
+      err => {
+      }
+    );
+
+  }
+
+  requestGPSPermission() {
+    return this.locationAccuracy.canRequest().then((canRequest: boolean) => {
+      if (canRequest) {
+        return this.askToTurnOnGPS();
+      } else {
+        // Show 'GPS Permission Request' dialogue
+        return this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
+          .then(
+            () => {
+              // call method to turn on GPS
+              return this.askToTurnOnGPS();
+            },
+            error => {
+              // Show alert if user click on 'No Thanks'
+              this.presentGPSAlert('Alert',
+                'GPS permission is required to get your current location .Plesse relaunch the app and provide permission to use GPS.');
+            });
+      }
+    });
+  }
+
+  askToTurnOnGPS() {
+    return this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
+      () => {
+        // When GPS Turned ON call method to get Accurate location coordinates
+        return this.getLocationCoordinates();
+      },
+      error => {
+        this.presentGPSAlert('Alert',
+          'GPS is required to get your current location .Plesse relaunch the app.');
+      }
+    );
+  }
+
+  getLocationCoordinates() {
+    return this.geolocation.getCurrentPosition().then((resp) => {
+      WeatherService.locationCoords.lattitude = resp.coords.latitude;
+      WeatherService.locationCoords.longitude = resp.coords.longitude;
+      WeatherService.locationCoords.accuracy = resp.coords.accuracy;
+      WeatherService.locationCoords.timestamp = resp.timestamp;
+      return true;
+    }).catch((error) => {
+    });
   }
 
   toggleWeatherDetails() {
@@ -50,9 +120,10 @@ export class AlertPage implements OnInit {
   }
 
   getWeatherDetails() {
-    this.weatherService.getWeatherByCord(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude).subscribe(res => {
-      this.weatherData = res.json();
-    }, err => { });
+    this.weatherService.getWeatherByCord(WeatherService.locationCoords.lattitude,
+      WeatherService.locationCoords.longitude).subscribe(res => {
+        this.weatherData = res.json();
+      }, err => { });
   }
 
   openWeatherNews() {
@@ -93,8 +164,8 @@ export class AlertPage implements OnInit {
       if (data && data.images && data.images.length > 0 && data.images[0].classifiers && data.images[0].classifiers.length > 0 && data.images[0].classifiers[0].classes
         && data.images[0].classifiers[0].classes.length > 0) {
         if (data.images[0].classifiers[0].classes[0].class === 'Cyclone')
-        //  this.cycloneAlertPer = data.images[0].classifiers[0].classes[0].score * 100;
-        this.cycloneAlertPer=0;
+          //  this.cycloneAlertPer = data.images[0].classifiers[0].classes[0].score * 100;
+          this.cycloneAlertPer = 0;
       }
     });
   }
@@ -147,65 +218,7 @@ export class AlertPage implements OnInit {
       this.router.navigate(['/chatbot']);
     }
   }
-  //Check if application having GPS access permission  
-  checkGPSPermission() {
-    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
-      result => {
-        if (result.hasPermission) {
-          this.askToTurnOnGPS();
-        } else {
-          this.requestGPSPermission();
-        }
-      },
-      err => {
-        //    alert(err);
-      }
-    );
-  }
 
-  requestGPSPermission() {
-    this.locationAccuracy.canRequest().then((canRequest: boolean) => {
-      if (canRequest) {
-        this.askToTurnOnGPS();
-      } else {
-        //Show 'GPS Permission Request' dialogue
-        this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
-          .then(
-          () => {
-            // call method to turn on GPS
-            this.askToTurnOnGPS();
-          },
-          error => {
-            //Show alert if user click on 'No Thanks'
-            //   alert('requestPermission Error requesting location permissions ' + error)
-          }
-          );
-      }
-    });
-  }
-
-  askToTurnOnGPS() {
-    this.locationAccuracy.request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY).then(
-      () => {
-        // When GPS Turned ON call method to get Accurate location coordinates
-        this.getLocationCoordinates()
-      },
-      //   error => alert('Error requesting location permissions ' + JSON.stringify(error))
-    );
-  }
-
-  getLocationCoordinates() {
-    this.geolocation.getCurrentPosition().then((resp) => {
-      WeatherService.locationCoords.lattitude = resp.coords.latitude;
-      WeatherService.locationCoords.longitude = resp.coords.longitude;
-      WeatherService.locationCoords.accuracy = resp.coords.accuracy;
-      WeatherService.locationCoords.timestamp = resp.timestamp;
-      WeatherService.locationCoords.lattitude = 40.67;
-      WeatherService.locationCoords.longitude = -83.65;
-    }).catch((error) => {
-      //  alert('Error getting location' + error);
-    });
-  }
 
   sendSms() {
     this.weatherService.getPlaceDetailsByGeoCode(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude).subscribe(resp => {
@@ -233,6 +246,21 @@ export class AlertPage implements OnInit {
     await alert.present();
   }
 
+  async presentGPSAlert(headerText: string, message: string) {
+    const alert = await this.alertController.create({
+      header: headerText,
+      message: message,
+      buttons: [
+        {
+          text: 'Ok',
+          handler: () => {
+            navigator['app'].exitApp();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
 
 }
 

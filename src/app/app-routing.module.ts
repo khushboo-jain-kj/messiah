@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import {NavigateToSafeHomePage} from './alert/navigateToSafeHome/navigateToSafeHome';
+import { NavigateToSafeHomePage } from './alert/navigateToSafeHome/navigateToSafeHome';
 
 const routes: Routes = [
   {
@@ -12,7 +12,7 @@ const routes: Routes = [
   { path: 'list', loadChildren: './list/list.module#ListPageModule' },
   { path: 'chatbot', loadChildren: './chatbot/chatbot.module#ChatbotPageModule' },
   { path: 'alert', loadChildren: './alert/alert.module#AlertPageModule' },
-  { path: 'navigate',component:NavigateToSafeHomePage },
+  { path: 'navigate', component: NavigateToSafeHomePage },
   { path: 'no-network', loadChildren: './no-network/no-network.module#NoNetworkPageModule' },
   { path: 'community-forum', loadChildren: './community-forum/community-forum.module#CommunityForumPageModule' },
   { path: 'signup', loadChildren: './signup/signup.module#SignupPageModule' }
@@ -22,6 +22,6 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

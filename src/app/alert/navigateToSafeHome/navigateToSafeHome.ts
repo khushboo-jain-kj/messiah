@@ -46,22 +46,17 @@ export class NavigateToSafeHomePage implements OnInit {
 
       });
     this.initMap();
+    let locationCoords = {
+      lattitude: 40.67, longitude: -95.85
+    };
     if (this.polygonPts) {
-      this.insidePoly = this.pointInsidePolygon(this.polygonPts, WeatherService.locationCoords);
+      this.insidePoly = this.pointInsidePolygon(this.polygonPts, locationCoords);
     }
 
     let loc: LatLng;
-    if (WeatherService.locationCoords.lattitude && WeatherService.locationCoords.longitude) {
-      loc = new LatLng(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude);
-      this.getNearbyPlace(loc)
+    loc = new LatLng(locationCoords.lattitude, locationCoords.longitude);
+    this.getNearbyPlace(loc);
 
-    } else {
-      this.getLocation().then(res => {
-        loc = new LatLng(res.coords.latitude, res.coords.longitude);
-        this.getNearbyPlace(loc);
-      }).catch(err => {
-      });
-    }
 
   }
   initMap() {

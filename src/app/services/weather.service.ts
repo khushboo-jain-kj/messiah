@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, Headers } from '@angular/http';
-import { HttpHeaders } from '@angular/common/http';
-import { HTTP } from '@ionic-native/http/ngx';
 
 import { Observable } from 'rxjs';
 import { map, delay } from 'rxjs/operators';

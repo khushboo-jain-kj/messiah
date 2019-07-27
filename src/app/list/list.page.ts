@@ -36,26 +36,14 @@ export class ListPage implements OnInit {
 
     let loc: LatLng;
 
-    if (WeatherService.locationCoords.lattitude && WeatherService.locationCoords.longitude) {
-      loc = new LatLng(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude);
-      this.getNearbyPlace(loc)
-      this.moveCamera(loc);
-      this.createMarker(loc, 'You are here').then((marker: Marker) => {
-        marker.showInfoWindow();
-      }).catch(err => {
-      });
-    } else {
-      this.getLocation().then(res => {
-        loc = new LatLng(res.coords.latitude, res.coords.longitude);
-        this.getNearbyPlace(loc);
-        this.moveCamera(loc);
-        this.createMarker(loc, 'You are here').then((marker: Marker) => {
-          marker.showInfoWindow();
-        }).catch(err => {
-        });
-      }).catch(err => {
-      });
-    }
+    loc = new LatLng(WeatherService.locationCoords.lattitude, WeatherService.locationCoords.longitude);
+    this.getNearbyPlace(loc)
+    this.moveCamera(loc);
+    this.createMarker(loc, 'You are here').then((marker: Marker) => {
+      marker.showInfoWindow();
+    }).catch(err => {
+    });
+
 
   }
 

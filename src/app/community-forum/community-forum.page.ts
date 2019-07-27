@@ -80,7 +80,7 @@ export class CommunityForumPage implements OnInit {
       nlpResult.entities.forEach(entity => {
         if (entity.type.toUpperCase() === 'PERSON') {
           dataObj.userName = entity.text;
-          dataObj.imageUrl = "https://res.cloudinary.com/twenty20/private_images/t_watermark-criss-cross-10/v1471520346000/photosp/c03026eb-b6d5-4f00-be6d-1a6f429ac3ba/stock-photo-india-child-school-kid-backpack-uniform-going-to-school-school-uniform-indian-child-c03026eb-b6d5-4f00-be6d-1a6f429ac3ba.jpg";
+          dataObj.imageUrl = "https://live.staticflickr.com/4139/4922915062_e148f72bcd_b.jpg";
           dataObj.communityDataType = 'Missing';
         }
 

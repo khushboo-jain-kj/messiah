@@ -13,7 +13,6 @@ import { GoogleMaps } from '@ionic-native/google-maps';
 import { Network } from '@ionic-native/network/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
 
-import { HTTP } from '@ionic-native/http/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -41,7 +40,6 @@ import {NavigateToSafeHomePage} from './alert/navigateToSafeHome/navigateToSafeH
     GoogleMaps,
     Network,
     Camera,
-    HTTP,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     WeatherService,
     NetworkService,

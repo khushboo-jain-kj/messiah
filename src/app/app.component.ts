@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
-import { Platform } from '@ionic/angular';
+import { Platform, AlertController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -58,6 +58,7 @@ export class AppComponent {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private weatherService: WeatherService,
+    private alertCtrl: AlertController,
     public networkService: NetworkService,
     public router: Router,
     public _loc: Location
@@ -68,9 +69,16 @@ export class AppComponent {
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleLightContent();
-
-      this.splashScreen.hide();
       this.networkSubscriber();
+      this.platform.backButton.subscribe(() => {
+        if (this.router.url === '/alert') {
+          this.alertCon();
+        }
+        else {
+          this._loc.back();
+        }
+      });
+      this.splashScreen.hide();
 
       let windyMapOptions = {
         key: 'vbuDH7tvzC2rHSjHyb4chnaNxzgT6OoD',
@@ -80,11 +88,7 @@ export class AppComponent {
         WeatherService.windyMap = windyAPI;
       });
 
-      // document.addEventListener("offline", function(){ alert('off'); }, false);
-      // document.addEventListener("online", function(){ alert('on');}, false);
     });
-    WeatherService.locationCoords.lattitude = 40.67;
-    WeatherService.locationCoords.longitude = -95.85;
   }
 
   networkSubscriber(): void {
@@ -111,6 +115,27 @@ export class AppComponent {
 
     }
   }
-
+  async alertCon() {
+    // tslint:disable-next-line: whitespace
+    const alert = await this.alertCtrl.create({
+      header: 'Exit App',
+      message: 'Are You sure You want to exit the app?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Confirm',
+          handler: () => {
+            navigator['app'].exitApp();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
 
 }
